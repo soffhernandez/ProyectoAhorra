@@ -3,7 +3,6 @@ import { Text, StyleSheet, View, Button } from 'react-native';
 import PantallaInicio from './PantallaInicio';
 import ScreensInicio from './ScreensInicio';
 import IngresosScreen from './IngresosScreen';
-import PresupuestoMensualScreen from './PresupuestoMensualScreen';
 import Presupuesto from './Presupuesto';
 
 export default function Screens() {
@@ -31,7 +30,6 @@ export default function Screens() {
           <Button onPress={() => setScreen('PantallaInicio')} title="Log in" />
           <Button onPress={() => setScreen('inicio')} title="Inicio" />
           <Button onPress={() => setScreen('IngresosScreen')} title="Ingresos" />
-          <Button onPress={() => setScreen('PresupuestoMensualScreen')} title="Presupuesto mensual" />
           <Button onPress={() => setScreen('presupuesto')} title="Presupuesto" />
         </View>
       );
