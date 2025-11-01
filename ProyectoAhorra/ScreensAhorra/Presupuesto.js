@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList, Modal, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -46,7 +46,166 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
   );
 };
 
+// Modal para Agregar Categoría
+const ModalAgregarCategoria = ({ visible, onClose }) => {
+  const [iconoSeleccionado, setIconoSeleccionado] = useState(0);
+  
+  const iconos = [
+    { id: 0, icono: 'cart', color: '#4dd0e1' },
+    { id: 1, icono: 'home', color: '#ff8a80' },
+    { id: 2, icono: 'car', color: '#ff80ab' },
+    { id: 3, icono: 'fast-food', color: '#ffd54f' },
+    { id: 4, icono: 'bulb', color: '#ffeb3b' },
+    { id: 5, icono: 'game-controller', color: '#b388ff' },
+    { id: 6, icono: 'shirt', color: '#69f0ae' },
+    { id: 7, icono: 'fitness', color: '#ff5252' },
+    { id: 8, icono: 'book', color: '#64b5f6' },
+    { id: 9, icono: 'airplane', color: '#4dd0e1' },
+    { id: 10, icono: 'gift', color: '#ba68c8' },
+    { id: 11, icono: 'paw', color: '#ff9800' },
+  ];
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitulo}>Agregar Categoría</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.modalBody}>
+              <Text style={styles.labelModal}>Nombre de la categoría</Text>
+              <TextInput 
+                style={styles.inputModal}
+                placeholder="Ej: Alimentos"
+                placeholderTextColor="#999"
+              />
+
+              <Text style={styles.labelModal}>Presupuesto</Text>
+              <View style={styles.inputConIcono}>
+                <Text style={styles.inputIcono}>$</Text>
+                <TextInput 
+                  style={[styles.inputModal, { paddingLeft: 30 }]}
+                  placeholder="0.00"
+                  placeholderTextColor="#999"
+                  keyboardType="numeric"
+                />
+                <Text style={styles.inputHelper}>Rellena este campo.</Text>
+              </View>
+
+              <Text style={styles.labelModal}>Ícono</Text>
+              <View style={styles.iconosGrid}>
+                {iconos.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[
+                      styles.iconoItem,
+                      { backgroundColor: item.color + '20' },
+                      iconoSeleccionado === item.id && styles.iconoItemSeleccionado
+                    ]}
+                    onPress={() => setIconoSeleccionado(item.id)}
+                  >
+                    <Ionicons name={item.icono} size={28} color={item.color} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.modalFooter}>
+            <TouchableOpacity style={styles.botonModalCancelar} onPress={onClose}>
+              <Text style={styles.botonModalCancelarTexto}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botonModalAgregar}>
+              <Text style={styles.botonModalAgregarTexto}>Agregar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+// Modal para Agregar Gasto
+const ModalAgregarGasto = ({ visible, onClose }) => {
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitulo}>Agregar Gasto</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.modalBody}>
+              <Text style={styles.labelModal}>Categoría</Text>
+              <TouchableOpacity style={styles.inputModal}>
+                <Text style={{ color: '#999' }}>Seleccionar categoría</Text>
+                <Ionicons name="chevron-down" size={20} color="#999" style={{ marginLeft: 'auto' }} />
+              </TouchableOpacity>
+
+              <Text style={styles.labelModal}>Monto</Text>
+              <View style={styles.inputConIcono}>
+                <Text style={styles.inputIcono}>$</Text>
+                <TextInput 
+                  style={[styles.inputModal, { paddingLeft: 30 }]}
+                  placeholder="0.00"
+                  placeholderTextColor="#999"
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <Text style={styles.labelModal}>Fecha</Text>
+              <TouchableOpacity style={styles.inputModal}>
+                <Ionicons name="calendar-outline" size={20} color="#999" />
+                <Text style={{ color: '#333', marginLeft: 10 }}>31 de octubre, 2025</Text>
+              </TouchableOpacity>
+
+              <Text style={styles.labelModal}>Descripción</Text>
+              <TextInput 
+                style={[styles.inputModal, styles.textAreaModal]}
+                placeholder="Agregar descripción..."
+                placeholderTextColor="#999"
+                multiline
+                numberOfLines={4}
+              />
+            </View>
+          </ScrollView>
+
+          <View style={styles.modalFooter}>
+            <TouchableOpacity style={styles.botonModalCancelar} onPress={onClose}>
+              <Text style={styles.botonModalCancelarTexto}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botonModalAgregar}>
+              <Text style={styles.botonModalAgregarTexto}>Agregar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 export default function PresupuestoMensualScreen() {
+  const [modalCategoria, setModalCategoria] = useState(false);
+  const [modalGasto, setModalGasto] = useState(false);
   
   const presupuestoTotal = 1650;
   const gastado = 1330;
@@ -137,12 +296,18 @@ export default function PresupuestoMensualScreen() {
 
             {/* Botones de Acción */}
             <View style={styles.botonesContainer}>
-              <TouchableOpacity style={styles.botonSecundario}>
+              <TouchableOpacity 
+                style={styles.botonSecundario}
+                onPress={() => setModalCategoria(true)}
+              >
                 <Ionicons name="add" size={18} color="#000" />
                 <Text style={styles.botonSecundarioTexto}>Agregar Categoría</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.botonPrimario}>
+              <TouchableOpacity 
+                style={styles.botonPrimario}
+                onPress={() => setModalGasto(true)}
+              >
                 <Ionicons name="add" size={18} color="#fff" />
                 <Text style={styles.botonPrimarioTexto}>Agregar Gasto</Text>
               </TouchableOpacity>
@@ -202,6 +367,17 @@ export default function PresupuestoMensualScreen() {
           <Text style={styles.navText}>Gráficas</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modales */}
+      <ModalAgregarCategoria 
+        visible={modalCategoria} 
+        onClose={() => setModalCategoria(false)} 
+      />
+      
+      <ModalAgregarGasto 
+        visible={modalGasto} 
+        onClose={() => setModalGasto(false)} 
+      />
     </View>
   );
 }
@@ -488,5 +664,131 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#999',
     marginTop: 4,
+  },
+
+  // Estilos de Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    width: '100%',
+    maxWidth: 500,
+    maxHeight: '90%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  modalTitulo: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333',
+  },
+  modalBody: {
+    padding: 20,
+  },
+  labelModal: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+    marginTop: 12,
+  },
+  inputModal: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 14,
+    color: '#333',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputConIcono: {
+    position: 'relative',
+  },
+  inputIcono: {
+    position: 'absolute',
+    left: 12,
+    top: 14,
+    fontSize: 14,
+    color: '#666',
+    zIndex: 1,
+  },
+  inputHelper: {
+    fontSize: 11,
+    color: '#999',
+    marginTop: 4,
+    textAlign: 'right',
+  },
+  textAreaModal: {
+    minHeight: 100,
+    textAlignVertical: 'top',
+  },
+  iconosGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 8,
+  },
+  iconoItem: {
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  iconoItemSeleccionado: {
+    borderColor: '#1976d2',
+    backgroundColor: '#e3f2fd',
+  },
+  modalFooter: {
+    flexDirection: 'row',
+    padding: 20,
+    gap: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  botonModalCancelar: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+  },
+  botonModalCancelarTexto: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
+  },
+  botonModalAgregar: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: '#000',
+    alignItems: 'center',
+  },
+  botonModalAgregarTexto: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
