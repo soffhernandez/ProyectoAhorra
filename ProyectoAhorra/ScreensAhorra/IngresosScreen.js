@@ -1,9 +1,95 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, ScrollView, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
+// Modal para Agregar/Editar Transacción
+const ModalTransaccion = ({ visible, onClose }) => {
+  const categorias = ['Sueldo', 'Freelance', 'Inversiones', 'Otros'];
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitulo}>Nueva Transacción</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.modalBody}>
+              
+              {/* Monto Grande */}
+              <View style={styles.amountContainerModal}>
+                <Text style={styles.amountSymbolModal}>$</Text>
+                <Text style={styles.amountValueModal}>0.00</Text>
+              </View>
+
+              {/* Tipo de transacción */}
+              <Text style={styles.labelModal}>Tipo de transacción</Text>
+              <View style={styles.tipoSelector}>
+                <View style={[styles.tipoBoton, styles.tipoBotonActivo]}>
+                  <Ionicons name="arrow-down" size={20} color="#fff" />
+                  <Text style={[styles.tipoBotonTexto, styles.tipoBotonTextoActivo]}>
+                    Ingreso
+                  </Text>
+                </View>
+
+                <View style={styles.tipoBoton}>
+                  <Ionicons name="arrow-up" size={20} color="#f44336" />
+                  <Text style={styles.tipoBotonTexto}>Gasto</Text>
+                </View>
+              </View>
+
+              {/* Categoría */}
+              <Text style={styles.labelModal}>Categoría</Text>
+              <View style={styles.categoriasGrid}>
+                {categorias.map((cat) => (
+                  <View key={cat} style={styles.categoriaChip}>
+                    <Text style={styles.categoriaChipTexto}>{cat}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Fecha */}
+              <Text style={styles.labelModal}>Fecha</Text>
+              <View style={styles.inputModal}>
+                <Ionicons name="calendar-outline" size={18} color="#666" />
+                <Text style={styles.inputModalTexto}>31 de octubre, 2025</Text>
+              </View>
+
+              {/* Descripción */}
+              <Text style={styles.labelModal}>Descripción</Text>
+              <View style={[styles.inputModalField, styles.textAreaModal]}>
+                <Text style={styles.inputPlaceholder}>Agregar descripción...</Text>
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.modalFooter}>
+            <TouchableOpacity style={styles.botonModalCancelar} onPress={onClose}>
+              <Text style={styles.botonModalCancelarTexto}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botonModalGuardar} onPress={onClose}>
+              <Text style={styles.botonModalGuardarTexto}>Guardar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 export default function IngresosScreen() {
+  const [modalTransaccion, setModalTransaccion] = useState(false);
+
   const transaccionesEjemplo = [
     { id: '1', descripcion: 'Salario mensual', monto: 3500.00, tipo: 'Ingreso', categoria: 'Sueldo', fecha: '20 de sep. 2025' },
     { id: '2', descripcion: 'Compras del supermercado', monto: 450.00, tipo: 'Gasto', categoria: 'Alimentación', fecha: '4 de oct. 2025' },
@@ -19,7 +105,7 @@ export default function IngresosScreen() {
           
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => console.log('Volver')}>
+            <TouchableOpacity>
               <Ionicons name="arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.titulo}>Ingresos</Text>
@@ -42,53 +128,17 @@ export default function IngresosScreen() {
             </View>
           </View>
 
-          {/* Formulario */}
+          {/* Botón para agregar */}
           <View style={styles.contenedorBlanco}>
-            <Text style={styles.subtitulo}>Nueva Transacción</Text>
-            <Text style={styles.descripcionSeccion}>Registra un ingreso o gasto</Text>
+            <Text style={styles.subtitulo}>Transacciones</Text>
+            <Text style={styles.descripcionSeccion}>Registra tus ingresos y gastos</Text>
 
-            <View style={styles.amountContainer}>
-              <Text style={styles.amountSymbol}>$</Text>
-              <Text style={styles.amountValue}>0.00</Text>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Tipo de transacción</Text>
-              <View style={styles.input}>
-                <Text style={styles.inputPlaceholder}>Ingreso</Text>
-              </View>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Monto</Text>
-              <View style={styles.input}>
-                <Text style={styles.inputPlaceholder}>$0.00</Text>
-              </View>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Categoría</Text>
-              <View style={styles.input}>
-                <Text style={styles.inputPlaceholder}>Seleccionar</Text>
-              </View>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Fecha</Text>
-              <View style={styles.input}>
-                <Text style={styles.inputPlaceholder}>31 de octubre, 2025</Text>
-              </View>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Descripción</Text>
-              <View style={[styles.input, styles.textArea]}>
-                <Text style={styles.inputPlaceholder}>Agregar descripción...</Text>
-              </View>
-            </View>
-
-            <TouchableOpacity style={styles.botonGuardar}>
-              <Text style={styles.botonGuardarTexto}>Guardar transacción</Text>
+            <TouchableOpacity 
+              style={styles.botonAgregar}
+              onPress={() => setModalTransaccion(true)}
+            >
+              <Ionicons name="add-circle" size={22} color="#fff" />
+              <Text style={styles.botonAgregarTexto}>Agregar Transacción</Text>
             </TouchableOpacity>
           </View>
 
@@ -127,12 +177,22 @@ export default function IngresosScreen() {
                       </Text>
                     </View>
                   </View>
-                  <Text style={[
-                    styles.transaccionMonto,
-                    { color: item.tipo === 'Ingreso' ? '#4caf50' : '#f44336' }
-                  ]}>
-                    {item.tipo === 'Ingreso' ? '+' : '-'}${item.monto.toLocaleString('es-MX')}
-                  </Text>
+                  <View style={styles.transaccionAcciones}>
+                    <Text style={[
+                      styles.transaccionMonto,
+                      { color: item.tipo === 'Ingreso' ? '#4caf50' : '#f44336' }
+                    ]}>
+                      {item.tipo === 'Ingreso' ? '+' : '-'}${item.monto.toLocaleString('es-MX')}
+                    </Text>
+                    <View style={styles.accionesBotones}>
+                      <TouchableOpacity style={{ marginRight: 10 }}>
+                        <Ionicons name="pencil" size={16} color="#1976d2" />
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Ionicons name="trash" size={16} color="#f44336" />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
               )}
             />
@@ -164,6 +224,12 @@ export default function IngresosScreen() {
           <Text style={styles.navText}>Gráficas</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modal */}
+      <ModalTransaccion
+        visible={modalTransaccion}
+        onClose={() => setModalTransaccion(false)}
+      />
     </View>
   );
 }
@@ -190,7 +256,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 
-  // Tarjetas de Resumen
   tarjetasResumen: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -222,7 +287,6 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 
-  // Contenedor Blanco
   contenedorBlanco: {
     backgroundColor: '#fff',
     marginHorizontal: 15,
@@ -247,66 +311,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  // Amount Display
-  amountContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1976d2',
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  amountSymbol: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginRight: 5,
-  },
-  amountValue: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-
-  // Formulario
-  formGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#333',
-    marginBottom: 6,
-  },
-  input: {
-    backgroundColor: '#f5f5f5',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
-  },
-  inputPlaceholder: {
-    fontSize: 14,
-    color: '#999',
-  },
-  textArea: {
-    minHeight: 60,
-  },
-  botonGuardar: {
+  botonAgregar: {
     backgroundColor: '#1976d2',
     paddingVertical: 14,
     borderRadius: 8,
-    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
-  botonGuardarTexto: {
+  botonAgregarTexto: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
-    textAlign: 'center',
   },
 
-  // Transacciones
   transaccionItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -350,13 +369,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '600',
   },
+  transaccionAcciones: {
+    alignItems: 'flex-end',
+  },
   transaccionMonto: {
     fontSize: 15,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginBottom: 6,
+  },
+  accionesBotones: {
+    flexDirection: 'row',
   },
 
-  // Bottom Navigation
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -385,5 +409,180 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#999',
     marginTop: 4,
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    width: '100%',
+    maxWidth: 500,
+    maxHeight: '90%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  modalTitulo: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333',
+  },
+  modalBody: {
+    padding: 20,
+  },
+
+  amountContainerModal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1976d2',
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  amountSymbolModal: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginRight: 5,
+  },
+  amountValueModal: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+
+  labelModal: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+    marginTop: 12,
+  },
+  inputModal: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  inputModalTexto: {
+    fontSize: 14,
+    color: '#333',
+  },
+  inputModalField: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    padding: 12,
+  },
+  inputPlaceholder: {
+    fontSize: 14,
+    color: '#999',
+  },
+  textAreaModal: {
+    minHeight: 100,
+  },
+
+  tipoSelector: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 10,
+  },
+  tipoBoton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
+    gap: 8,
+  },
+  tipoBotonActivo: {
+    backgroundColor: '#1976d2',
+    borderColor: '#1976d2',
+  },
+  tipoBotonTexto: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+  },
+  tipoBotonTextoActivo: {
+    color: '#fff',
+  },
+
+  categoriasGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 10,
+  },
+  categoriaChip: {
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  categoriaChipTexto: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#666',
+  },
+
+  modalFooter: {
+    flexDirection: 'row',
+    padding: 20,
+    gap: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  botonModalCancelar: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+  },
+  botonModalCancelarTexto: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
+  },
+  botonModalGuardar: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: '#1976d2',
+    alignItems: 'center',
+  },
+  botonModalGuardarTexto: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
