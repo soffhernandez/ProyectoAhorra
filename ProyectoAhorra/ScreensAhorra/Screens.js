@@ -4,6 +4,7 @@ import PantallaInicio from './PantallaInicio';
 import ScreensInicio from './ScreensInicio';
 import IngresosScreen from './IngresosScreen';
 import Presupuesto from './Presupuesto';
+import Graficas from './ScreensGraficas';
 
 export default function Screens() {
   const [screen, setScreen] = useState('menu');
@@ -20,7 +21,8 @@ export default function Screens() {
       return <PantallaInicio />;
     case 'presupuesto':
       return <Presupuesto />;
-
+    case 'Graficas':
+      return <Graficas/>;
     case 'menu':
     default:
       return (
@@ -31,6 +33,7 @@ export default function Screens() {
           <Button onPress={() => setScreen('inicio')} title="Inicio" />
           <Button onPress={() => setScreen('IngresosScreen')} title="Ingresos" />
           <Button onPress={() => setScreen('presupuesto')} title="Presupuesto" />
+          <Button onPress={() => setScreen('Graficas')} title="Graficas" />
         </View>
       );
   }
