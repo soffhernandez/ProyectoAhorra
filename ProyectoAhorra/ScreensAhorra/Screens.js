@@ -5,9 +5,7 @@ import ScreensInicio from './ScreensInicio';
 import IngresosScreen from './IngresosScreen';
 import Presupuesto from './Presupuesto';
 import Graficas from './ScreensGraficas';
-import TransactionScreen from './TransaccionesScreen';
 import ProfileScreen from './PerfilScreen';
-import NewTransactionScreen from './NuevaTra';
 import PantallaRegistro from './PantallaRegistro';
 
 export default function Screens() {
@@ -33,8 +31,6 @@ export default function Screens() {
       return <TransactionScreen/>;
     case 'Perfil':
       return <ProfileScreen/>;
-    case 'NTransaccion':
-      return <NewTransactionScreen/>;
     case 'menu':
     default:
       return (
@@ -44,12 +40,10 @@ export default function Screens() {
           <Button onPress={() => setScreen('PantallaInicio')} title="Log in" />
           <Button onPress={() => setScreen('Registro')} title="Registro" />
           <Button onPress={() => setScreen('inicio')} title="Inicio" />
-          <Button onPress={() => setScreen('IngresosScreen')} title="Ingresos" />
+          <Button onPress={() => setScreen('IngresosScreen')} title="Ingresos y transacciones" />
           <Button onPress={() => setScreen('presupuesto')} title="Presupuesto" />
           <Button onPress={() => setScreen('Graficas')} title="Graficas" />
-          <Button onPress={() => setScreen('Transacciones')} title="Transacciones" />
           <Button onPress={() => setScreen('Perfil')} title="Perfil" />
-          <Button onPress={() => setScreen('NTransaccion')} title="Nueva Transaccion" />
         </View>
       );
   }
