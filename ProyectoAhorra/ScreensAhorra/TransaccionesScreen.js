@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const transactions = [
   { id: 1, title: 'Comida', description: 'Comida en el restaurante', date: '20 de octubre 2025', amount: -120 },
-  { id: 2, title: 'Comida', description: 'Comida en el restaurante', date: '20 de octubre 2025', amount: -120 },
-  { id: 3, title: 'Comida', description: 'Comida en el restaurante', date: '20 de octubre 2025', amount: -120 },
-  { id: 4, title: 'Comida', description: 'Comida en el restaurante', date: '20 de octubre 2025', amount: -120 },
-  { id: 5, title: 'Comida', description: 'Comida en el restaurante', date: '20 de octubre 2025', amount: -120 },
+  { id: 2, title: 'Ropa', description: 'Ropa en la tienda: ....', date: '20 de octubre 2025', amount: -500 },
+  { id: 3, title: 'Renta', description: 'Renta del mes de Octubre', date: '20 de octubre 2025', amount: -4520 },
+  { id: 4, title: 'Agua', description: 'Comisión de agua del mes de Octubre', date: '20 de octubre 2025', amount: -320 },
+  { id: 5, title: 'Luz', description: 'Pago del mes de Octubre', date: '20 de octubre 2025', amount: -220 },
 ];
 
 export default function TransactionScreen() {
@@ -36,7 +36,7 @@ export default function TransactionScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {transactions.map(item => (
           <View key={item.id} style={styles.card}>
             <View>
@@ -52,6 +52,10 @@ export default function TransactionScreen() {
           </View>
         ))}
       </ScrollView>
+
+      <TouchableOpacity style={styles.fab}>
+        <Text style={styles.fabText}>Nueva{'\n'}transaccion</Text>
+      </TouchableOpacity>
 
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.bottomButton}>
@@ -74,24 +78,24 @@ export default function TransactionScreen() {
           <Text style={styles.bottomText}>Gráficas</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Floating Button */}
-      <TouchableOpacity style={styles.fab}>
-        <Text style={styles.fabText}>Nueva{'\n'}transacciones</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#e0f4ff' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#e0f4ff',
+    width: '100%',
+  },
   header: {
     backgroundColor: '#00aaff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 14,
+    width: '100%',
   },
   headerTitle: {
     color: '#fff',
@@ -100,40 +104,42 @@ const styles = StyleSheet.create({
   },
   filterRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     marginVertical: 10,
+    width: '100%',
   },
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#fff',
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
-    elevation: 2,
+    borderRadius: 10,
+    elevation: 3,
   },
   filterText: { 
-    backgroundColor: '#fff',
     marginHorizontal: 4,
-    color: '#333' 
+    color: '#333',
   },
-
+  scrollViewContent: {
+    paddingBottom: 130, 
+    paddingHorizontal: 16,
+  },
   card: {
     backgroundColor: '#fff',
-    marginHorizontal: 16,
     marginVertical: 6,
     padding: 12,
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     elevation: 3,
+    width: '100%',
   },
-  cardTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
-  cardSubtitle: { color: '#666', fontSize: 13, marginTop: 2 },
-  amountContainer: { alignItems: 'flex-end' },
-  amount: { color: 'red', fontWeight: 'bold', fontSize: 16 },
-
   bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#fff',
@@ -141,13 +147,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderColor: '#ccc',
   },
-
-  bottomButton: { alignItems: 'center' },
-  bottomButtonActive: { alignItems: 'center' },
-  bottomText: { fontSize: 12, color: '#007aff', marginTop: 2 },
   fab: {
     position: 'absolute',
-    bottom: 70,
+    bottom: 80, 
     alignSelf: 'center',
     backgroundColor: '#b3ecff',
     paddingHorizontal: 18,
@@ -156,4 +158,11 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   fabText: { color: '#007aff', fontWeight: 'bold', textAlign: 'center' },
+  bottomButton: { alignItems: 'center', flex: 1 },
+  bottomButtonActive: { alignItems: 'center', flex: 1 },
+  bottomText: { fontSize: 12, color: '#007aff', marginTop: 2 },
+  cardTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
+  cardSubtitle: { color: '#666', fontSize: 13, marginTop: 2 },
+  amountContainer: { alignItems: 'flex-end' },
+  amount: { color: 'red', fontWeight: 'bold', fontSize: 16 },
 });

@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const InputField = ({ icon, placeholder, value, secure }) => (
+const Field = ({ icon, placeholder, value, secure }) => (
   <View style={styles.inputRow}>
-    <Ionicons name={icon} size={16} color="#999" style={styles.inputIcon} />
+    <Ionicons name={icon} size={16} color="#999" style={{ marginRight: 6 }} />
     <TextInput
       style={styles.input}
       placeholder={placeholder}
@@ -16,57 +16,65 @@ const InputField = ({ icon, placeholder, value, secure }) => (
   </View>
 );
 
+const Section = ({ icon, title, subtitle, children }) => (
+  <View style={styles.section}>
+    <View style={styles.sectionHeader}>
+      <Ionicons name={icon} size={18} color="#00aaff" />
+      <Text style={styles.sectionTitle}>{title}</Text>
+    </View>
+    <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+    {children}
+  </View>
+);
+
 export default function ProfileScreen() {
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Ionicons name="arrow-back" size={24} color="#fff" />
         <Text style={styles.headerTitle}>Perfil</Text>
         <Ionicons name="search" size={22} color="#fff" />
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-        {/* Profile Card */}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.profileCard}>
           <Ionicons name="person-outline" size={60} color="#fff" />
           <Text style={styles.profileText}>Mi perfil</Text>
         </View>
 
-        {/* Información Personal */}
-        <View style={styles.section}>
-          <SectionHeader icon="information-circle-outline" title="Información Personal" subtitle="Actualiza tus datos personales y de contacto" />
-          <Label text="Nombre completo" />
-          <InputField icon="person-outline" value="Ana García Martínez" />
-          <Label text="Correo electrónico" />
-          <InputField icon="mail-outline" value="ana.garcia@email.com" />
-          <Label text="Teléfono" />
-          <InputField icon="call-outline" value="+34 612 345 678" />
-        </View>
+        <Section
+          icon="information-circle-outline"
+          title="Información Personal"
+          subtitle="Actualiza tus datos personales y de contacto">
+          <Text style={styles.label}>Nombre completo</Text>
+          <Field icon="person-outline" value="Ana García Martínez" />
+          <Text style={styles.label}>Correo electrónico</Text>
+          <Field icon="mail-outline" value="ana.garcia@email.com" />
+          <Text style={styles.label}>Teléfono</Text>
+          <Field icon="call-outline" value="+52 442 5678 678" />
+        </Section>
 
-        {/* Seguridad */}
-        <View style={styles.section}>
-          <SectionHeader icon="lock-closed-outline" title="Seguridad" subtitle="Cambia tu contraseña para mantener tu cuenta segura" />
-          <Label text="Contraseña actual" />
-          <InputField icon="lock-open-outline" placeholder="Introduce tu contraseña actual" secure />
-          <Label text="Nueva contraseña" />
-          <InputField icon="key-outline" placeholder="Introduce una nueva contraseña" secure />
-          <Label text="Confirmar contraseña" />
-          <InputField icon="checkmark-circle-outline" placeholder="Confirma tu nueva contraseña" secure />
-
+        <Section
+          icon="lock-closed-outline"
+          title="Seguridad"
+          subtitle="Cambia tu contraseña para mantener tu cuenta segura">
+          <Text style={styles.label}>Contraseña actual</Text>
+          <Field icon="lock-open-outline" placeholder="Introduce tu contraseña actual" secure />
+          <Text style={styles.label}>Nueva contraseña</Text>
+          <Field icon="key-outline" placeholder="Introduce una nueva contraseña" secure />
+          <Text style={styles.label}>Confirmar contraseña</Text>
+          <Field icon="checkmark-circle-outline" placeholder="Confirma tu nueva contraseña" secure />
           <TouchableOpacity style={styles.updateButton}>
             <Text style={styles.updateText}>Actualizar información</Text>
           </TouchableOpacity>
-        </View>
+        </Section>
 
-        {/* Logout */}
         <TouchableOpacity style={styles.logout}>
           <Ionicons name="log-out-outline" size={18} color="#fff" />
           <Text style={styles.logoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Bottom Nav */}
       <View style={styles.bottomBar}>
         {[
           ['home-outline', 'Inicio'],
@@ -84,50 +92,40 @@ export default function ProfileScreen() {
   );
 }
 
-// Small helper components
-const SectionHeader = ({ icon, title, subtitle }) => (
-  <>
-    <View style={styles.sectionHeader}>
-      <Ionicons name={icon} size={18} color="#00aaff" />
-      <Text style={styles.sectionTitle}>{title}</Text>
-    </View>
-    <Text style={styles.sectionSubtitle}>{subtitle}</Text>
-  </>
-);
-
-const Label = ({ text }) => <Text style={styles.label}>{text}</Text>;
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#e0f4ff' },
+ container: { 
+    flex: 1, 
+    backgroundColor: '#e0f4ff',
+    width: '100%',
+  },
   header: {
     backgroundColor: '#00aaff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    width: '100%',
   },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   profileCard: {
-    margin: 16,
     backgroundColor: '#66ccff',
     borderRadius: 16,
     alignItems: 'center',
     paddingVertical: 30,
+    marginBottom: 16,
   },
-  profileText: { color: '#fff', fontSize: 16, marginTop: 8 },
   section: {
     backgroundColor: '#fff',
-    marginHorizontal: 16,
-    marginBottom: 16,
     borderRadius: 12,
     padding: 16,
-    elevation: 2,
+    marginBottom: 16,
+    elevation: 3,
   },
-  
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  sectionTitle: { fontWeight: 'bold', fontSize: 15, color: '#333', marginLeft: 6 },
-  sectionSubtitle: { fontSize: 12, color: '#777', marginBottom: 10 },
-  label: { fontSize: 13, color: '#333', marginTop: 8, marginBottom: 4 },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -135,7 +133,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
   },
-  inputIcon: { marginRight: 6 },
   input: { flex: 1, paddingVertical: 6, color: '#333' },
   updateButton: {
     backgroundColor: '#00cc99',
@@ -143,7 +140,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 10,
   },
-  updateText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
   logout: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -151,9 +147,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff6666',
     padding: 10,
     borderRadius: 25,
+    marginTop: 10,
   },
-  logoutText: { color: '#fff', marginLeft: 6, fontWeight: 'bold' },
   bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#fff',
@@ -161,6 +161,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderColor: '#ccc',
   },
-  bottomButton: { alignItems: 'center' },
+  bottomButton: { alignItems: 'center', flex: 1 },
   bottomText: { fontSize: 12, color: '#007aff', marginTop: 2 },
+  scrollContent: { paddingTop: 110, paddingBottom: 140, paddingHorizontal: 16 },
+  profileText: { color: '#fff', fontSize: 16, marginTop: 8 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
+  sectionTitle: { fontWeight: 'bold', fontSize: 15, color: '#333', marginLeft: 6 },
+  sectionSubtitle: { fontSize: 12, color: '#777', marginBottom: 10 },
+  label: { fontSize: 13, color: '#333', marginTop: 8, marginBottom: 4 },
+  updateText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
+  logoutText: { color: '#fff', marginLeft: 6, fontWeight: 'bold' },
 });
