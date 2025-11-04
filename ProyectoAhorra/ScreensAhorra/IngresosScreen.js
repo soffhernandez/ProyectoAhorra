@@ -1,195 +1,289 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { useState } from "react"
+import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal } from "react-native"
+import { LinearGradient } from "expo-linear-gradient"
+import { Ionicons } from "@expo/vector-icons"
 
-// Modal para Agregar/Editar Transacción
+
+// COMPONENTE: Modal para Agregar/Editar Transacción
+// Permite al usuario crear o modificar transacciones
 const ModalTransaccion = ({ visible, onClose }) => {
-  const categorias = ['Sueldo', 'Freelance', 'Inversiones', 'Otros'];
+  // Lista de categorías disponibles para clasificar transacciones
+  const categorias = ["Sueldo", "Freelance", "Inversiones", "Otros"]
 
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={onClose}>
+      {/* Fondo oscuro semitransparente */}
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitulo}>Nueva Transacción</Text>
+        {/* Contenedor principal del modal */}
+        <View style={styles.card}>
+          {/* HEADER DEL MODAL: Título y botón de cerrar */}
+          <View style={[styles.row, { padding: 20, borderBottomWidth: 1, borderBottomColor: "#cfe3ff" }]}>
+            <Text style={[styles.text, styles.bold, { fontSize: 22, color: "#007bff" }]}>Nueva Transacción</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="#333" />
+              <Ionicons name="close" size={28} color="#007bff" />
             </TouchableOpacity>
           </View>
 
+          {/* CONTENIDO DEL MODAL: Formulario scrolleable */}
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.modalBody}>
-              
-              {/* Monto Grande */}
-              <View style={styles.amountContainerModal}>
-                <Text style={styles.amountSymbolModal}>$</Text>
-                <Text style={styles.amountValueModal}>0.00</Text>
+            <View style={styles.section}>
+              {/* CAMPO: Monto de la transacción */}
+              <View style={[styles.btn, { backgroundColor: "#4da6ff", paddingVertical: 18 }]}>
+                <Text style={[styles.text, styles.bold, { fontSize: 28, color: "#fff" }]}>$</Text>
+                <Text style={[styles.text, styles.bold, { fontSize: 36, color: "#fff", marginLeft: 5 }]}>0.00</Text>
               </View>
 
-              {/* Tipo de transacción */}
-              <Text style={styles.labelModal}>Tipo de transacción</Text>
-              <View style={styles.tipoSelector}>
-                <View style={[styles.tipoBoton, styles.tipoBotonActivo]}>
-                  <Ionicons name="arrow-down" size={20} color="#fff" />
-                  <Text style={[styles.tipoBotonTexto, styles.tipoBotonTextoActivo]}>
-                    Ingreso
-                  </Text>
+              {/* CAMPO: Selector de tipo (Ingreso o Gasto) */}
+              <Text
+                style={[styles.text, styles.bold, { fontSize: 15, marginTop: 12, marginBottom: 8, color: "#007bff" }]}
+              >
+                Tipo de transacción
+              </Text>
+              <View style={styles.row}>
+                {/* Botón Ingreso (activo por defecto) */}
+                <View style={[styles.btn, styles.btnActive, { flex: 1 }]}>
+                  <Ionicons name="arrow-down" size={22} color="#fff" />
+                  <Text style={[styles.text, styles.bold, { fontSize: 15, color: "#fff" }]}>Ingreso</Text>
                 </View>
 
-                <View style={styles.tipoBoton}>
-                  <Ionicons name="arrow-up" size={20} color="#f44336" />
-                  <Text style={styles.tipoBotonTexto}>Gasto</Text>
+                {/* Botón Gasto (inactivo) */}
+                <View style={[styles.btn, { flex: 1, backgroundColor: "#f0f6ff", borderColor: "#cfe3ff" }]}>
+                  <Ionicons name="arrow-up" size={22} color="#4da6ff" />
+                  <Text style={[styles.text, styles.bold, { fontSize: 15, color: "#4da6ff" }]}>Gasto</Text>
                 </View>
               </View>
 
-              {/* Categoría */}
-              <Text style={styles.labelModal}>Categoría</Text>
-              <View style={styles.categoriasGrid}>
+              {/* CAMPO: Selector de categoría */}
+              <Text
+                style={[styles.text, styles.bold, { fontSize: 15, marginTop: 12, marginBottom: 8, color: "#007bff" }]}
+              >
+                Categoría
+              </Text>
+              {/* Chips de categorías en formato wrap */}
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
                 {categorias.map((cat) => (
-                  <View key={cat} style={styles.categoriaChip}>
-                    <Text style={styles.categoriaChipTexto}>{cat}</Text>
+                  <View key={cat} style={styles.chip}>
+                    <Text style={[styles.text, styles.bold, { fontSize: 14, color: "#4da6ff" }]}>{cat}</Text>
                   </View>
                 ))}
               </View>
 
-              {/* Fecha */}
-              <Text style={styles.labelModal}>Fecha</Text>
-              <View style={styles.inputModal}>
-                <Ionicons name="calendar-outline" size={18} color="#666" />
-                <Text style={styles.inputModalTexto}>31 de octubre, 2025</Text>
+              {/* CAMPO: Selector de fecha */}
+              <Text
+                style={[styles.text, styles.bold, { fontSize: 15, marginTop: 12, marginBottom: 8, color: "#007bff" }]}
+              >
+                Fecha
+              </Text>
+              <View style={styles.input}>
+                <Ionicons name="calendar-outline" size={20} color="#4da6ff" />
+                <Text style={[styles.text, { fontSize: 15, fontWeight: "600", color: "#333" }]}>
+                  31 de octubre, 2025
+                </Text>
               </View>
 
-              {/* Descripción */}
-              <Text style={styles.labelModal}>Descripción</Text>
-              <View style={[styles.inputModalField, styles.textAreaModal]}>
-                <Text style={styles.inputPlaceholder}>Agregar descripción...</Text>
+              {/* CAMPO: Área de texto para descripción */}
+              <Text
+                style={[styles.text, styles.bold, { fontSize: 15, marginTop: 12, marginBottom: 8, color: "#007bff" }]}
+              >
+                Descripción
+              </Text>
+              <View style={[styles.input, { minHeight: 100, alignItems: "flex-start" }]}>
+                <Text style={[styles.text, { fontSize: 15, color: "#99bde9" }]}>Agregar descripción...</Text>
               </View>
             </View>
           </ScrollView>
 
-          <View style={styles.modalFooter}>
-            <TouchableOpacity style={styles.botonModalCancelar} onPress={onClose}>
-              <Text style={styles.botonModalCancelarTexto}>Cancelar</Text>
+          {/* FOOTER DEL MODAL: Botones de acción */}
+          <View style={[styles.row, { padding: 20, borderTopWidth: 1, borderTopColor: "#cfe3ff" }]}>
+            {/* Botón Cancelar */}
+            <TouchableOpacity
+              style={[styles.btn, { flex: 1, backgroundColor: "#f0f6ff", paddingVertical: 14, borderColor: "#cfe3ff" }]}
+              onPress={onClose}
+            >
+              <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#4da6ff" }]}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botonModalGuardar} onPress={onClose}>
-              <Text style={styles.botonModalGuardarTexto}>Guardar</Text>
+            {/* Botón Guardar */}
+            <TouchableOpacity
+              style={[styles.btn, styles.btnActive, { flex: 1, paddingVertical: 14 }]}
+              onPress={onClose}
+            >
+              <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#fff" }]}>Guardar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
     </Modal>
-  );
-};
+  )
+}
 
+// ============================================
+// COMPONENTE PRINCIPAL: Pantalla de Ingresos
+// Muestra el resumen financiero y el historial de transacciones
+// ============================================
 export default function IngresosScreen() {
-  const [modalTransaccion, setModalTransaccion] = useState(false);
+  // Estado para controlar la visibilidad del modal
+  const [modalTransaccion, setModalTransaccion] = useState(false)
 
+  // Datos de ejemplo para las transacciones
   const transaccionesEjemplo = [
-    { id: '1', descripcion: 'Salario mensual', monto: 3500.00, tipo: 'Ingreso', categoria: 'Sueldo', fecha: '20 de sep. 2025' },
-    { id: '2', descripcion: 'Compras del supermercado', monto: 450.00, tipo: 'Gasto', categoria: 'Alimentación', fecha: '4 de oct. 2025' },
-    { id: '3', descripcion: 'Gasolina', monto: 120.00, tipo: 'Gasto', categoria: 'Transporte', fecha: '9 de oct. 2025' },
-    { id: '4', descripcion: 'Proyecto freelance', monto: 500.00, tipo: 'Ingreso', categoria: 'Otros', fecha: '14 de oct. 2025' },
-    { id: '5', descripcion: 'Cine y cena', monto: 80.00, tipo: 'Gasto', categoria: 'Entretenimiento', fecha: '21 de oct. 2025' },
-  ];
+    {
+      id: "1",
+      descripcion: "Salario mensual",
+      monto: 3500.0,
+      tipo: "Ingreso",
+      categoria: "Sueldo",
+      fecha: "20 de sep. 2025",
+    },
+    {
+      id: "2",
+      descripcion: "Compras del supermercado",
+      monto: 450.0,
+      tipo: "Gasto",
+      categoria: "Alimentación",
+      fecha: "4 de oct. 2025",
+    },
+    { id: "3", descripcion: "Gasolina", monto: 120.0, tipo: "Gasto", categoria: "Transporte", fecha: "9 de oct. 2025" },
+    {
+      id: "4",
+      descripcion: "Proyecto freelance",
+      monto: 500.0,
+      tipo: "Ingreso",
+      categoria: "Otros",
+      fecha: "14 de oct. 2025",
+    },
+    {
+      id: "5",
+      descripcion: "Cine y cena",
+      monto: 80.0,
+      tipo: "Gasto",
+      categoria: "Entretenimiento",
+      fecha: "21 de oct. 2025",
+    },
+  ]
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#4dd0e1', '#00bcd4']} style={styles.gradient}>
+      {/* Fondo degradado de la pantalla */}
+      <LinearGradient colors={["#e9f4ff", "#e9f4ff"]} style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          
-          {/* Header */}
-          <View style={styles.header}>
+          {/* ========== SECCIÓN: Header con botón de regreso ========== */}
+          <View
+            style={[
+              styles.row,
+              { paddingTop: 50, paddingHorizontal: 20, paddingBottom: 15, backgroundColor: "#4da6ff" },
+            ]}
+          >
             <TouchableOpacity>
-              <Ionicons name="arrow-back" size={26} color="#fff" />
+              <Ionicons name="arrow-back" size={28} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.titulo}>Ingresos</Text>
-            <View style={{ width: 26 }} />
+            <Text style={[styles.text, styles.bold, { fontSize: 22, color: "#fff" }]}>Ingresos</Text>
+            <View style={{ width: 28 }} />
           </View>
 
-          {/* Tarjetas de Resumen */}
-          <View style={styles.tarjetasResumen}>
-            <View style={styles.cardResumen}>
-              <Text style={styles.labelResumen}>Balance Total</Text>
-              <Text style={styles.montoResumen}>$3,350.00</Text>
+          {/* ========== SECCIÓN: Tarjetas de Resumen Financiero ========== */}
+          {/* Muestra Balance Total, Total Ingresos y Total Gastos */}
+          <View style={styles.row}>
+            {/* Tarjeta: Balance Total */}
+            <View style={styles.cardSmall}>
+              <Text style={[styles.text, { fontSize: 13, color: "#4da6ff", marginBottom: 6 }]}>Balance Total</Text>
+              <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#007bff" }]}>$3,350.00</Text>
             </View>
-            <View style={styles.cardResumen}>
-              <Text style={styles.labelResumen}>Total Ingresos</Text>
-              <Text style={[styles.montoResumen, { color: '#4caf50' }]}>$4,000.00</Text>
+            {/* Tarjeta: Total Ingresos (verde) */}
+            <View style={styles.cardSmall}>
+              <Text style={[styles.text, { fontSize: 13, color: "#4da6ff", marginBottom: 6 }]}>Total Ingresos</Text>
+              <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#00cc66" }]}>$4,000.00</Text>
             </View>
-            <View style={styles.cardResumen}>
-              <Text style={styles.labelResumen}>Total Gastos</Text>
-              <Text style={[styles.montoResumen, { color: '#f44336' }]}>$650.00</Text>
+            {/* Tarjeta: Total Gastos (rojo) */}
+            <View style={styles.cardSmall}>
+              <Text style={[styles.text, { fontSize: 13, color: "#4da6ff", marginBottom: 6 }]}>Total Gastos</Text>
+              <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#ff4d4d" }]}>$650.00</Text>
             </View>
           </View>
 
-          {/* Botón para agregar */}
-          <View style={styles.contenedorBlanco}>
-            <Text style={styles.subtitulo}>Transacciones</Text>
-            <Text style={styles.descripcionSeccion}>Registra tus ingresos y gastos</Text>
+          {/* ========== SECCIÓN: Botón para Agregar Transacción ========== */}
+          <View style={styles.card}>
+            <Text style={[styles.text, styles.bold, { fontSize: 18, marginBottom: 4, color: "#007bff" }]}>
+              Transacciones
+            </Text>
+            <Text style={[styles.text, { fontSize: 13, color: "#4da6ff", marginBottom: 20 }]}>
+              Registra tus ingresos y gastos
+            </Text>
 
-            <TouchableOpacity 
-              style={styles.botonAgregar}
-              onPress={() => setModalTransaccion(true)}
-            >
-              <Ionicons name="add-circle" size={22} color="#fff" />
-              <Text style={styles.botonAgregarTexto}>Agregar Transacción</Text>
+            {/* Botón principal que abre el modal */}
+            <TouchableOpacity style={[styles.btn, styles.btnActive]} onPress={() => setModalTransaccion(true)}>
+              <Ionicons name="add-circle" size={24} color="#fff" />
+              <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#fff" }]}>Agregar Transacción</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Historial de Transacciones */}
-          <View style={styles.contenedorBlanco}>
-            <Text style={styles.subtitulo}>Historial de Transacciones</Text>
-            <Text style={styles.descripcionSeccion}>5 transacciones registradas</Text>
+          {/* ========== SECCIÓN: Historial de Transacciones ========== */}
+          <View style={styles.card}>
+            <Text style={[styles.text, styles.bold, { fontSize: 18, marginBottom: 4, color: "#007bff" }]}>
+              Historial de Transacciones
+            </Text>
+            <Text style={[styles.text, { fontSize: 13, color: "#4da6ff", marginBottom: 20 }]}>
+              5 transacciones registradas
+            </Text>
 
+            {/* Lista de transacciones */}
             <FlatList
               data={transaccionesEjemplo}
               keyExtractor={(item) => item.id}
               scrollEnabled={false}
               renderItem={({ item }) => (
-                <View style={styles.transaccionItem}>
-                  <View style={styles.transaccionIcono}>
-                    {item.tipo === 'Ingreso' ? (
-                      <Ionicons name="arrow-down" size={20} color="#4caf50" />
+                <View style={styles.item}>
+                  {/* Icono de tipo de transacción (flecha arriba/abajo) */}
+                  <View style={styles.icon}>
+                    {item.tipo === "Ingreso" ? (
+                      <Ionicons name="arrow-down" size={22} color="#00cc66" />
                     ) : (
-                      <Ionicons name="arrow-up" size={20} color="#f44336" />
+                      <Ionicons name="arrow-up" size={22} color="#ff4d4d" />
                     )}
                   </View>
-                  <View style={styles.transaccionInfo}>
-                    <Text style={styles.transaccionDescripcion}>{item.descripcion}</Text>
-                    <Text style={styles.transaccionDetalles}>
+                  {/* Información de la transacción */}
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.text, styles.bold, { fontSize: 16, marginBottom: 4, color: "#007bff" }]}>
+                      {item.descripcion}
+                    </Text>
+                    <Text style={[styles.text, { fontSize: 13, color: "#4da6ff" }]}>
                       {item.fecha} · {item.categoria}
                     </Text>
-                    <View style={[
-                      styles.transaccionTipoBadge, 
-                      { backgroundColor: item.tipo === 'Ingreso' ? '#e8f5e9' : '#ffebee' }
-                    ]}>
-                      <Text style={[
-                        styles.transaccionTipoBadgeText,
-                        { color: item.tipo === 'Ingreso' ? '#4caf50' : '#f44336' }
-                      ]}>
+                    {/* Badge de tipo (Ingreso/Gasto) */}
+                    <View
+                      style={[
+                        styles.badge,
+                        { backgroundColor: item.tipo === "Ingreso" ? "#e1f7ee" : "#ffecec", marginTop: 6 },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.text,
+                          styles.bold,
+                          { fontSize: 12, color: item.tipo === "Ingreso" ? "#00cc66" : "#ff4d4d" },
+                        ]}
+                      >
                         {item.tipo}
                       </Text>
                     </View>
                   </View>
-                  <View style={styles.transaccionAcciones}>
-                    <Text style={[
-                      styles.transaccionMonto,
-                      { color: item.tipo === 'Ingreso' ? '#4caf50' : '#f44336' }
-                    ]}>
-                      {item.tipo === 'Ingreso' ? '+' : '-'}${item.monto.toLocaleString('es-MX')}
+                  {/* Monto y botones de acción */}
+                  <View style={{ alignItems: "flex-end" }}>
+                    <Text
+                      style={[
+                        styles.text,
+                        styles.bold,
+                        { fontSize: 17, marginBottom: 6, color: item.tipo === "Ingreso" ? "#00cc66" : "#ff4d4d" },
+                      ]}
+                    >
+                      {item.tipo === "Ingreso" ? "+" : "-"}${item.monto.toLocaleString("es-MX")}
                     </Text>
-                    <View style={styles.accionesBotones}>
-                      <TouchableOpacity style={{ marginRight: 10 }}>
-                        <Ionicons name="pencil" size={16} color="#1976d2" />
+                    {/* Botones de editar y eliminar */}
+                    <View style={styles.row}>
+                      <TouchableOpacity style={{ marginLeft: 12 }}>
+                        <Ionicons name="pencil" size={18} color="#007bff" />
                       </TouchableOpacity>
-                      <TouchableOpacity>
-                        <Ionicons name="trash" size={16} color="#f44336" />
+                      <TouchableOpacity style={{ marginLeft: 12 }}>
+                        <Ionicons name="trash" size={18} color="#ff4d4d" />
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -198,391 +292,203 @@ export default function IngresosScreen() {
             />
           </View>
 
+          {/* Espacio al final para evitar que el contenido quede detrás de la navegación */}
           <View style={{ height: 100 }} />
         </ScrollView>
       </LinearGradient>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
+      {/* ========== NAVEGACIÓN INFERIOR ========== */}
+      {/* Barra de navegación con 4 opciones principales */}
+      <View style={styles.nav}>
+        {/* Tab: Inicio (activo) */}
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="home-outline" size={24} color="#00bcd4" />
-          <Text style={styles.navTextActive}>Inicio</Text>
+          <Ionicons name="home-outline" size={26} color="#007bff" />
+          <Text style={[styles.text, styles.bold, { fontSize: 12, color: "#007bff", marginTop: 4 }]}>Inicio</Text>
         </TouchableOpacity>
-        
+
+        {/* Tab: Transacciones */}
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="swap-horizontal-outline" size={24} color="#999" />
-          <Text style={styles.navText}>Transacciones</Text>
+          <Ionicons name="swap-horizontal-outline" size={26} color="#4da6ff" />
+          <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>
+            Transacciones
+          </Text>
         </TouchableOpacity>
-        
+
+        {/* Tab: Presupuesto */}
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="wallet-outline" size={24} color="#999" />
-          <Text style={styles.navText}>Presupuesto</Text>
+          <Ionicons name="wallet-outline" size={26} color="#4da6ff" />
+          <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>
+            Presupuesto
+          </Text>
         </TouchableOpacity>
-        
+
+        {/* Tab: Gráficas */}
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="bar-chart-outline" size={24} color="#999" />
-          <Text style={styles.navText}>Gráficas</Text>
+          <Ionicons name="bar-chart-outline" size={26} color="#4da6ff" />
+          <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>
+            Gráficas
+          </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Modal */}
-      <ModalTransaccion
-        visible={modalTransaccion}
-        onClose={() => setModalTransaccion(false)}
-      />
+      {/* Modal de transacción (se muestra cuando modalTransaccion es true) */}
+      <ModalTransaccion visible={modalTransaccion} onClose={() => setModalTransaccion(false)} />
     </View>
-  );
+  )
 }
 
+// ============================================
+// ESTILOS
+// Definición de todos los estilos reutilizables
+// ============================================
 const styles = StyleSheet.create({
+  // Contenedor principal que ocupa toda la pantalla
   container: {
     flex: 1,
-    backgroundColor: '#00bcd4',
+    backgroundColor: "#e9f4ff",
   },
-  gradient: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  titulo: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#fff',
-  },
-
-  tarjetasResumen: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  // Layout horizontal con elementos espaciados y centrados
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 15,
     marginBottom: 20,
+    gap: 10,
   },
-  cardResumen: {
-    backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+  // Sección con padding para contenido del modal
+  section: {
+    padding: 20,
   },
-  labelResumen: {
-    fontSize: 11,
-    color: '#666',
-    marginBottom: 6,
-    textAlign: 'center',
+  // Estilo base para todo el texto
+  text: {
+    color: "#333",
   },
-  montoResumen: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
+  // Modificador para texto en negrita
+  bold: {
+    fontWeight: "700",
   },
-
-  contenedorBlanco: {
-    backgroundColor: '#fff',
+  // Tarjeta grande con sombra (usada para secciones principales)
+  card: {
+    backgroundColor: "#f5f8ff",
     marginHorizontal: 15,
     marginBottom: 15,
     borderRadius: 12,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
   },
-  subtitulo: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
+  // Tarjeta pequeña para resumen financiero (Balance, Ingresos, Gastos)
+  cardSmall: {
+    backgroundColor: "#fff",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    flex: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
   },
-  descripcionSeccion: {
-    fontSize: 12,
-    color: '#999',
-    marginBottom: 20,
-  },
-
-  botonAgregar: {
-    backgroundColor: '#1976d2',
-    paddingVertical: 14,
+  // Botón base (gris claro con borde)
+  btn: {
+    backgroundColor: "#f0f6ff",
+    paddingVertical: 16,
     borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 8,
+    borderWidth: 2,
+    borderColor: "#cfe3ff",
   },
-  botonAgregarTexto: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
+  // Modificador para botón activo (azul)
+  btnActive: {
+    backgroundColor: "#007bff",
+    borderColor: "#007bff",
   },
-
-  transaccionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fafafa',
-    padding: 12,
+  // Campo de entrada de texto con icono
+  input: {
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
+    borderRadius: 8,
+    padding: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  // Chip para categorías (píldora redondeada)
+  chip: {
+    backgroundColor: "#f0f6ff",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
+  },
+  // Item de transacción en el historial
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    padding: 14,
     borderRadius: 10,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#f0f0f0',
+    borderColor: "#cfe3ff",
   },
-  transaccionIcono: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
+  // Icono circular para tipo de transacción
+  icon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#e9f4ff",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
-  transaccionInfo: {
-    flex: 1,
-  },
-  transaccionDescripcion: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-  },
-  transaccionDetalles: {
-    fontSize: 11,
-    color: '#999',
-    marginBottom: 6,
-  },
-  transaccionTipoBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+  // Badge pequeño para etiquetas (Ingreso/Gasto)
+  badge: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: 4,
   },
-  transaccionTipoBadgeText: {
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  transaccionAcciones: {
-    alignItems: 'flex-end',
-  },
-  transaccionMonto: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 6,
-  },
-  accionesBotones: {
-    flexDirection: 'row',
-  },
-
-  bottomNav: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
+  // Barra de navegación inferior
+  nav: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
     paddingVertical: 10,
     paddingBottom: 20,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-    shadowColor: '#000',
+    borderTopColor: "#cfe3ff",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 10,
   },
+  // Item individual de la navegación
   navItem: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  navTextActive: {
-    fontSize: 11,
-    color: '#00bcd4',
-    marginTop: 4,
-    fontWeight: '500',
-  },
-  navText: {
-    fontSize: 11,
-    color: '#999',
-    marginTop: 4,
-  },
-
+  // Fondo oscuro del modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(77,166,255,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    width: '100%',
-    maxWidth: 500,
-    maxHeight: '90%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 10,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  modalTitulo: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
-  },
-  modalBody: {
-    padding: 20,
-  },
-
-  amountContainerModal: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1976d2',
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  amountSymbolModal: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginRight: 5,
-  },
-  amountValueModal: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-
-  labelModal: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-    marginTop: 12,
-  },
-  inputModal: {
-    backgroundColor: '#f5f5f5',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  inputModalTexto: {
-    fontSize: 14,
-    color: '#333',
-  },
-  inputModalField: {
-    backgroundColor: '#f5f5f5',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
-  },
-  inputPlaceholder: {
-    fontSize: 14,
-    color: '#999',
-  },
-  textAreaModal: {
-    minHeight: 100,
-  },
-
-  tipoSelector: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 10,
-  },
-  tipoBoton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    paddingVertical: 12,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#e0e0e0',
-    gap: 8,
-  },
-  tipoBotonActivo: {
-    backgroundColor: '#1976d2',
-    borderColor: '#1976d2',
-  },
-  tipoBotonTexto: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-  },
-  tipoBotonTextoActivo: {
-    color: '#fff',
-  },
-
-  categoriasGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 10,
-  },
-  categoriaChip: {
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  categoriaChipTexto: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#666',
-  },
-
-  modalFooter: {
-    flexDirection: 'row',
-    padding: 20,
-    gap: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-  },
-  botonModalCancelar: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-  },
-  botonModalCancelarTexto: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-  },
-  botonModalGuardar: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#1976d2',
-    alignItems: 'center',
-  },
-  botonModalGuardarTexto: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
-  },
-});
+})
