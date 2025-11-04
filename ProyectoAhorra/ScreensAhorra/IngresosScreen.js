@@ -173,7 +173,7 @@ export default function IngresosScreen() {
             <TouchableOpacity>
               <Ionicons name="arrow-back" size={28} color="#fff" />
             </TouchableOpacity>
-            <Text style={[styles.text, styles.bold, { fontSize: 22, color: "#fff" }]}>Ingresos</Text>
+            <Text style={[styles.text, styles.bold, { fontSize: 22, color: "#fff" }]}>Ingresos y Transacciones</Text>
             <View style={{ width: 28 }} />
           </View>
 
