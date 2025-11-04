@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
-    backgroundColor: '#00aaff',
+    backgroundColor: '#4da6ff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

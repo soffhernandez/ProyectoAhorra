@@ -74,7 +74,7 @@ export default function TransactionScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.bottomButton}>
-          <Ionicons name="bar-chart-outline" size={22} color="#007aff" />
+          <Ionicons name="stats-chart" size={22} color="#007aff" />
           <Text style={styles.bottomText}>Gráficas</Text>
         </TouchableOpacity>
       </View>
@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
-    backgroundColor: '#00aaff',
+    backgroundColor: '#4da6ff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 14,
+    paddingVertical: 20,
     width: '100%',
   },
   headerTitle: {

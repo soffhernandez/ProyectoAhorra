@@ -11,7 +11,7 @@ export default function Graficas() {
         <View style={{ width: 26 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} alwaysBounceVertical={true}>
         <View style={styles.summaryRow}>
           <View style={[styles.summaryBox, { backgroundColor: "#f0fff5" }]}>
             <Ionicons name="trending-up-outline" size={22} color="#00cc66" />
@@ -101,6 +101,7 @@ export default function Graficas() {
           </ScrollView>
         </View>
       </ScrollView>
+      
       <View style={styles.bottomNav}>
         <View style={styles.navItem}>
           <Ionicons name="home-outline" size={24} color="#007bff" />
@@ -124,7 +125,10 @@ export default function Graficas() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#e9f4ff" },
+  container: { flex: 1, 
+    backgroundColor: "#e9f4ff", 
+    width: "100%",
+    height: "100%", },
 
   header: {
     backgroundColor: "#4da6ff",
@@ -132,13 +136,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 15,
   },
   headerTitle: { color: "#fff", fontSize: 22, fontWeight: "700" },
 
   scroll: {
+    flexGrow: 1,
     paddingBottom: 30,
+    justifyContent: "flex-start",
     alignItems: "center", 
   },
 

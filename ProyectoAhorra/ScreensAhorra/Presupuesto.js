@@ -434,6 +434,11 @@ export default function PresupuestoMensualScreen() {
 // Definición de todos los estilos del componente
 // ============================================
 const styles = StyleSheet.create({
+  container: { flex: 1,
+     backgroundColor: "#e9f4ff",
+     width: "100%",
+    height: "100%",
+     },
   // Contenedor principal
   container: { flex: 1, backgroundColor: "#e9f4ff" },
   gradient: { flex: 1 },
@@ -444,7 +449,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 20,
     position: "absolute",
     top: 0,
     left: 0,
