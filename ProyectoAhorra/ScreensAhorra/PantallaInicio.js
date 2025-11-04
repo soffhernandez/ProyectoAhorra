@@ -34,7 +34,7 @@ export default function PantallaInicio() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#cfe3ff',
     justifyContent: 'center',
     alignItems: 'center',
   },
