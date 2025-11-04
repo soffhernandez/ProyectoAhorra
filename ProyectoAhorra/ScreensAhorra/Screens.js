@@ -8,6 +8,7 @@ import Graficas from './ScreensGraficas';
 import TransactionScreen from './TransaccionesScreen';
 import ProfileScreen from './PerfilScreen';
 import NewTransactionScreen from './NuevaTra';
+import PantallaRegistro from './PantallaRegistro';
 
 export default function Screens() {
   const [screen, setScreen] = useState('menu');
@@ -22,6 +23,8 @@ export default function Screens() {
       return <PresupuestoMensualScreen />;
     case 'PantallaInicio':
       return <PantallaInicio />;
+    case 'Registro':
+      return <PantallaRegistro/>;
     case 'presupuesto':
       return <Presupuesto />;
     case 'Graficas':
@@ -39,6 +42,7 @@ export default function Screens() {
           <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Menu de interfaces</Text>
 
           <Button onPress={() => setScreen('PantallaInicio')} title="Log in" />
+          <Button onPress={() => setScreen('Registro')} title="Registro" />
           <Button onPress={() => setScreen('inicio')} title="Inicio" />
           <Button onPress={() => setScreen('IngresosScreen')} title="Ingresos" />
           <Button onPress={() => setScreen('presupuesto')} title="Presupuesto" />
