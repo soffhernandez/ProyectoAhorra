@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
       </View>
 
       {/* Contenido */}
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {/* Saldo Disponible */}
         <View style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>Saldo Disponible</Text>
@@ -54,22 +54,22 @@ export default function App() {
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
+        <View style={styles.navItem}>
           <Ionicons name="home-outline" size={24} color="#007bff" />
           <Text style={styles.navText}>Inicio</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        </View>
+        <View style={styles.navItem}>
           <Ionicons name="swap-horizontal-outline" size={24} color="#007bff" />
           <Text style={styles.navText}>Transacciones</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        </View>
+        <View style={styles.navItem}>
           <Ionicons name="wallet-outline" size={24} color="#007bff" />
           <Text style={styles.navText}>Presupuesto</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="stats-chart-outline" size={24} color="#007bff" />
+        </View>
+        <View style={styles.navItem}>
+          <Ionicons name="stats-chart" size={24} color="#007bff" />
           <Text style={styles.navText}>Gráficas</Text>
-        </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -78,134 +78,122 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#d9efff', 
+    backgroundColor: "#d9efff",
+    width: "100%",
+    height: "100%",
+
   },
-
-
   header: {
-    backgroundColor: '#4da6ff',
-    paddingTop: 50,
+    backgroundColor: "#4da6ff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingBottom: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+    paddingVertical: 14,
+    width: "100%",
     elevation: 3,
   },
   greeting: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   headerIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   icon: {
     marginRight: 10,
   },
-
-  scroll: {
-    padding: 20,
+  scrollViewContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 120,
+    width: "100%",
   },
-
   balanceCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingVertical: 25,
     paddingHorizontal: 15,
     borderRadius: 20,
     marginBottom: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    alignItems: "center",
     elevation: 3,
+    width: "100%",
+    marginTop: 20,
   },
   balanceLabel: {
     fontSize: 16,
-    color: '#555',
+    color: "#555",
   },
   balanceAmount: {
     fontSize: 36,
-    color: '#005cff',
-    fontWeight: 'bold',
+    color: "#005cff",
+    fontWeight: "bold",
     marginTop: 8,
   },
-
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 18,
     borderRadius: 20,
     marginBottom: 18,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    elevation: 3,
+    width: "100%",
   },
   cardTitle: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 10,
-    color: '#222',
+    color: "#222",
   },
-
   graphRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
     marginBottom: 8,
+    width: "100%",
   },
-
   link: {
-    color: '#007bff',
-    fontWeight: '500',
+    color: "#007bff",
+    fontWeight: "500",
     marginTop: 10,
-    textAlign: 'right',
+    textAlign: "right",
   },
-
-
   budgetRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   alertText: {
-    color: '#ff3b3b',
-    fontWeight: '700',
+    color: "#ff3b3b",
+    fontWeight: "700",
     marginLeft: 5,
   },
-
   transaction: {
     fontSize: 15,
-    color: '#333',
+    color: "#333",
     marginBottom: 6,
   },
-
   bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 3,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderTopWidth: 0.5,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    elevation: 5,
+    width: "100%",
   },
   navItem: {
-    alignItems: 'center',
+    alignItems: "center",
+    flex: 1,
   },
   navText: {
     fontSize: 13,
-    color: '#007bff',
+    color: "#007bff",
     marginTop: 3,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });

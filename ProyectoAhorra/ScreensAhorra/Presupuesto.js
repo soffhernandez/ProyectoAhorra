@@ -365,14 +365,18 @@ export default function PresupuestoMensualScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#e9f4ff" },
+  container: { flex: 1,
+     backgroundColor: "#e9f4ff",
+     width: "100%",
+    height: "100%",
+     },
   gradient: { flex: 1 },
   headerAzul: {
     backgroundColor: "#4da6ff",
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 20,
     position: "absolute",
     top: 0,
     left: 0,

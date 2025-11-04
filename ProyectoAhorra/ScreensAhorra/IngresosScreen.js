@@ -170,7 +170,7 @@ export default function IngresosScreen() {
           <View
             style={[
               styles.row,
-              { paddingTop: 50, paddingHorizontal: 20, paddingBottom: 15, backgroundColor: "#4da6ff" },
+              { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 15, backgroundColor: "#4da6ff" },
             ]}
           >
             <TouchableOpacity>
@@ -324,7 +324,7 @@ export default function IngresosScreen() {
 
         {/* Tab: Gráficas */}
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="bar-chart-outline" size={26} color="#4da6ff" />
+          <Ionicons name="stats-chart" size={26} color="#4da6ff" />
           <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>
             Gráficas
           </Text>
@@ -346,6 +346,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e9f4ff",
+    width: "100%",
+    height: "100%",
   },
   // Layout horizontal con elementos espaciados y centrados
   row: {
