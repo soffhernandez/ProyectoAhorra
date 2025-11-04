@@ -1,11 +1,12 @@
+"use client"
+
 import { useState } from "react"
 import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
 
-
 // COMPONENTE: Modal para Agregar/Editar Transacción
-// Permite al usuario crear o modificar transacciones
+// NOTA: Este modal solo muestra la interfaz pero NO guarda transacciones
 const ModalTransaccion = ({ visible, onClose }) => {
   // Lista de categorías disponibles para clasificar transacciones
   const categorias = ["Sueldo", "Freelance", "Inversiones", "Otros"]
@@ -46,7 +47,7 @@ const ModalTransaccion = ({ visible, onClose }) => {
                   <Text style={[styles.text, styles.bold, { fontSize: 15, color: "#fff" }]}>Ingreso</Text>
                 </View>
 
-                {/* Botón Gasto (inactivo) */}
+                {/* Botón Gasto */}
                 <View style={[styles.btn, { flex: 1, backgroundColor: "#f0f6ff", borderColor: "#cfe3ff" }]}>
                   <Ionicons name="arrow-up" size={22} color="#4da6ff" />
                   <Text style={[styles.text, styles.bold, { fontSize: 15, color: "#4da6ff" }]}>Gasto</Text>
@@ -59,7 +60,8 @@ const ModalTransaccion = ({ visible, onClose }) => {
               >
                 Categoría
               </Text>
-              {/* Chips de categorías en formato wrap */}
+
+              {/* categorias */}
               <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
                 {categorias.map((cat) => (
                   <View key={cat} style={styles.chip}>
@@ -102,7 +104,7 @@ const ModalTransaccion = ({ visible, onClose }) => {
             >
               <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#4da6ff" }]}>Cancelar</Text>
             </TouchableOpacity>
-            {/* Botón Guardar */}
+            {/* Botón Guardar - DESHABILITADO: Solo cierra el modal sin guardar */}
             <TouchableOpacity
               style={[styles.btn, styles.btnActive, { flex: 1, paddingVertical: 14 }]}
               onPress={onClose}
@@ -116,10 +118,7 @@ const ModalTransaccion = ({ visible, onClose }) => {
   )
 }
 
-// ============================================
-// COMPONENTE PRINCIPAL: Pantalla de Ingresos
 // Muestra el resumen financiero y el historial de transacciones
-// ============================================
 export default function IngresosScreen() {
   // Estado para controlar la visibilidad del modal
   const [modalTransaccion, setModalTransaccion] = useState(false)
@@ -209,7 +208,7 @@ export default function IngresosScreen() {
               Registra tus ingresos y gastos
             </Text>
 
-            {/* Botón principal que abre el modal */}
+            {/* Botón que abre el modal (sin funcionalidad de guardado) */}
             <TouchableOpacity style={[styles.btn, styles.btnActive]} onPress={() => setModalTransaccion(true)}>
               <Ionicons name="add-circle" size={24} color="#fff" />
               <Text style={[styles.text, styles.bold, { fontSize: 16, color: "#fff" }]}>Agregar Transacción</Text>
@@ -297,7 +296,6 @@ export default function IngresosScreen() {
         </ScrollView>
       </LinearGradient>
 
-      {/* ========== NAVEGACIÓN INFERIOR ========== */}
       {/* Barra de navegación con 4 opciones principales */}
       <View style={styles.nav}>
         {/* Tab: Inicio (activo) */}
@@ -331,16 +329,12 @@ export default function IngresosScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Modal de transacción (se muestra cuando modalTransaccion es true) */}
+      {/* Modal de transacción (solo muestra la interfaz, no guarda datos) */}
       <ModalTransaccion visible={modalTransaccion} onClose={() => setModalTransaccion(false)} />
     </View>
   )
 }
 
-// ============================================
-// ESTILOS
-// Definición de todos los estilos reutilizables
-// ============================================
 const styles = StyleSheet.create({
   // Contenedor principal que ocupa toda la pantalla
   container: {
