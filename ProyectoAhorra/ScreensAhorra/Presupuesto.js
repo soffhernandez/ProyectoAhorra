@@ -1,9 +1,10 @@
-"use client"
-
 import { useState } from "react"
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Modal, TextInput } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
+
+// COMPONENTE: Barra de Progreso
+// Muestra el porcentaje de presupuesto usado
 
 const ProgressBar = ({ progreso, color }) => (
   <View style={styles.progressBar}>
@@ -11,7 +12,12 @@ const ProgressBar = ({ progreso, color }) => (
   </View>
 )
 
+
+// COMPONENTE: Tarjeta de Categoría
+// Muestra información de cada categoría de gasto
+
 const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colorIcono }) => {
+  // Determina el color de la barra según el porcentaje usado
   const colorBarra = progreso > 95 ? "#ff4d4d" : progreso > 75 ? "#faad14" : "#00cc66"
 
   return (
@@ -21,6 +27,7 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
         { backgroundColor: "#4da6ff", borderWidth: 1, borderColor: "#cfe3ff", borderRadius: 12, padding: 15 },
       ]}
     >
+      {/* Fila superior: Ícono, nombre y botones de acción */}
       <View style={styles.row}>
         <View style={[styles.icono, { backgroundColor: colorIcono }]}>{icono}</View>
         <View style={styles.flex}>
@@ -33,6 +40,7 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
           <Text style={{ fontSize: 13, fontWeight: "600", color: "#ffffff", marginBottom: 5 }}>
             {Math.round(progreso)}%
           </Text>
+          {/* Botones de editar y eliminar */}
           <View style={{ flexDirection: "row", gap: 8 }}>
             <TouchableOpacity style={{ padding: 4 }}>
               <Ionicons name="pencil" size={14} color="#4da6ff" />
@@ -44,8 +52,10 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
         </View>
       </View>
 
+      {/* Barra de progreso visual */}
       <ProgressBar progreso={progreso} color={colorBarra} />
 
+      {/* Monto restante */}
       <Text style={{ fontSize: 12, color: "#ffffff", marginTop: 8 }}>
         Restante: ${restante.toLocaleString("es-MX")}
       </Text>
@@ -53,11 +63,15 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
   )
 }
 
+
+// Permite crear nuevas categorías de presupuesto
 const ModalAgregarCategoria = ({ visible, onClose }) => {
+  // Estados para los campos del formulario
   const [iconoSeleccionado, setIconoSeleccionado] = useState(0)
   const [nombre, setNombre] = useState("")
   const [presupuesto, setPresupuesto] = useState("")
 
+  // Iconos disponibles para las categorías
   const iconos = [
     { id: 0, icono: "cart", color: "#4dd0e1" },
     { id: 1, icono: "home", color: "#ff8a80" },
@@ -67,10 +81,17 @@ const ModalAgregarCategoria = ({ visible, onClose }) => {
     { id: 5, icono: "airplane", color: "#4dd0e1" },
   ]
 
+  // Función para agregar categoría (DESHABILITADA)
+  const handleAgregar = () => {
+    // Funcionalidad de agregar categoría deshabilitada
+    onClose()
+  }
+
   return (
     <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
+          {/* Header del modal */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitulo}>Agregar Categoría</Text>
             <TouchableOpacity onPress={onClose}>
@@ -78,7 +99,9 @@ const ModalAgregarCategoria = ({ visible, onClose }) => {
             </TouchableOpacity>
           </View>
 
+          {/* Cuerpo del modal con formulario */}
           <View style={styles.modalBody}>
+            {/* Campo: Nombre de la categoría */}
             <Text style={styles.label}>Nombre</Text>
             <TextInput
               style={styles.input}
@@ -88,6 +111,7 @@ const ModalAgregarCategoria = ({ visible, onClose }) => {
               onChangeText={setNombre}
             />
 
+            {/* Campo: Presupuesto */}
             <Text style={styles.label}>Presupuesto</Text>
             <View>
               <Text style={{ position: "absolute", left: 12, top: 14, fontSize: 14, color: "#666", zIndex: 1 }}>$</Text>
@@ -101,6 +125,7 @@ const ModalAgregarCategoria = ({ visible, onClose }) => {
               />
             </View>
 
+            {/* Selector de ícono */}
             <Text style={styles.label}>Ícono</Text>
             <View style={styles.grid}>
               {iconos.map((item) => (
@@ -119,11 +144,12 @@ const ModalAgregarCategoria = ({ visible, onClose }) => {
             </View>
           </View>
 
+          {/* Footer con botones de acción */}
           <View style={styles.modalFooter}>
             <TouchableOpacity style={styles.botonCancelar} onPress={onClose}>
               <Text style={{ fontSize: 14, fontWeight: "600", color: "#666" }}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botonAgregar} onPress={onClose}>
+            <TouchableOpacity style={styles.botonAgregar} onPress={handleAgregar}>
               <Text style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}>Agregar</Text>
             </TouchableOpacity>
           </View>
@@ -133,14 +159,24 @@ const ModalAgregarCategoria = ({ visible, onClose }) => {
   )
 }
 
+// MODAL: Agregar Gasto
+// Registrar gastos en categorías existentes
 const ModalAgregarGasto = ({ visible, onClose, categorias }) => {
+  // Estados para los campos del formulario
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("")
   const [monto, setMonto] = useState("")
+
+  // Función para agregar gasto (NO JALA)
+  const handleAgregar = () => {
+    // Funcionalidad de agregar gasto deshabilitada
+    onClose()
+  }
 
   return (
     <Modal visible={visible} transparent={true} animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
+          {/* Header del modal */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitulo}>Agregar Gasto</Text>
             <TouchableOpacity onPress={onClose}>
@@ -148,7 +184,9 @@ const ModalAgregarGasto = ({ visible, onClose, categorias }) => {
             </TouchableOpacity>
           </View>
 
+          {/* Cuerpo del modal con formulario */}
           <View style={styles.modalBody}>
+            {/* Selector de categoría */}
             <Text style={styles.label}>Categoría</Text>
             <View style={styles.grid}>
               {categorias.map((cat) => (
@@ -176,6 +214,7 @@ const ModalAgregarGasto = ({ visible, onClose, categorias }) => {
               ))}
             </View>
 
+            {/* Campo: Monto del gasto */}
             <Text style={styles.label}>Monto</Text>
             <View>
               <Text style={{ position: "absolute", left: 12, top: 14, fontSize: 14, color: "#666", zIndex: 1 }}>$</Text>
@@ -190,11 +229,12 @@ const ModalAgregarGasto = ({ visible, onClose, categorias }) => {
             </View>
           </View>
 
+          {/* Footer con botones de acción */}
           <View style={styles.modalFooter}>
             <TouchableOpacity style={styles.botonCancelar} onPress={onClose}>
               <Text style={{ fontSize: 14, fontWeight: "600", color: "#666" }}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botonAgregar} onPress={onClose}>
+            <TouchableOpacity style={styles.botonAgregar} onPress={handleAgregar}>
               <Text style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}>Agregar</Text>
             </TouchableOpacity>
           </View>
@@ -204,10 +244,15 @@ const ModalAgregarGasto = ({ visible, onClose, categorias }) => {
   )
 }
 
+
+// COMPONENTE PRINCIPAL: Pantalla de Presupuesto Mensual
+// Muestra el resumen del presupuesto, categorías y alertas
 export default function PresupuestoMensualScreen() {
+  // Estados para controlar la visibilidad de los modales
   const [modalCategoria, setModalCategoria] = useState(false)
   const [modalGasto, setModalGasto] = useState(false)
 
+  // Datos de ejemplo de las categorías
   const categorias = [
     {
       id: "1",
@@ -227,11 +272,13 @@ export default function PresupuestoMensualScreen() {
     },
   ]
 
+  // Datos del resumen general
   const presupuestoTotal = 7500
   const gastado = 5800
   const restante = 1700
   const porcentajeUsado = 77
 
+  // Calcula el restante y progreso de cada categoría
   const categoriasConCalculo = categorias.map((cat) => ({
     ...cat,
     restante: cat.total - cat.gastado,
@@ -240,6 +287,7 @@ export default function PresupuestoMensualScreen() {
 
   return (
     <View style={styles.container}>
+      {/* HEADER - Barra superior azul con título*/}
       <View style={styles.headerAzul}>
         <TouchableOpacity>
           <Ionicons name="arrow-back" size={26} color="#ffffff" />
@@ -247,9 +295,10 @@ export default function PresupuestoMensualScreen() {
         <Text style={styles.tituloHeader}>Presupuesto mensual</Text>
       </View>
 
+      {/*CONTENIDO PRINCIPAL - Scroll con todas las secciones */}
       <LinearGradient colors={["#e9f4ff", "#e9f4ff"]} style={styles.gradient}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Tarjeta de Resumen */}
+          {/* Muestra el presupuesto total, gastado y restante*/}
           <View style={[styles.resumen, { backgroundColor: "#ffffff", borderWidth: 1, borderColor: "#cfe3ff" }]}>
             <View style={styles.row}>
               <View style={styles.row}>
@@ -275,7 +324,7 @@ export default function PresupuestoMensualScreen() {
             </View>
           </View>
 
-          {/* Alertas Activas */}
+          {/* Muestra advertencias cuando una categoría está cerca del límite */}
           <View style={[styles.contenedor, { backgroundColor: "#ffffff" }]}>
             <View style={styles.row}>
               <Ionicons name="warning-outline" size={18} color="#ff9800" />
@@ -291,27 +340,36 @@ export default function PresupuestoMensualScreen() {
             </View>
           </View>
 
-          {/* Botones de Acción */}
+          {/* ============================================
+              SECCIÓN: Botones de Acción
+              Botones para agregar categoría, gasto y reiniciar mes
+              ============================================ */}
           <View style={[styles.contenedor, { backgroundColor: "#ffffff" }]}>
             <View style={styles.row}>
+              {/* Botón: Agregar Categoría */}
               <TouchableOpacity style={styles.botonSecundario} onPress={() => setModalCategoria(true)}>
                 <Ionicons name="add" size={18} color="#000" />
                 <Text style={{ fontSize: 13, fontWeight: "600", color: "#333", marginLeft: 6 }}>Agregar Categoría</Text>
               </TouchableOpacity>
 
+              {/* Botón: Agregar Gasto */}
               <TouchableOpacity style={styles.botonPrimario} onPress={() => setModalGasto(true)}>
                 <Ionicons name="add" size={18} color="#fff" />
                 <Text style={{ fontSize: 13, fontWeight: "600", color: "#fff", marginLeft: 6 }}>Agregar Gasto</Text>
               </TouchableOpacity>
             </View>
 
+            {/* Botón: Reiniciar Mes */}
             <TouchableOpacity style={styles.botonReiniciar}>
               <Ionicons name="refresh-outline" size={16} color="#666" />
               <Text style={{ fontSize: 13, color: "#666", marginLeft: 6 }}>Reiniciar Mes</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Categorías */}
+          {/* ============================================
+              SECCIÓN: Lista de Categorías
+              Muestra todas las categorías con su progreso
+              ============================================ */}
           <View style={[styles.contenedor, { backgroundColor: "#ffffff" }]}>
             <Text style={[styles.subtitulo, { color: "#333" }]}>Categorías ({categorias.length})</Text>
 
@@ -329,11 +387,15 @@ export default function PresupuestoMensualScreen() {
             ))}
           </View>
 
+          {/* Espacio adicional al final para el scroll */}
           <View style={{ height: 100 }} />
         </ScrollView>
       </LinearGradient>
 
-      {/* Bottom Navigation */}
+      {/* ============================================
+          NAVEGACIÓN INFERIOR
+          Barra de navegación con 4 opciones principales
+          ============================================ */}
       <View style={styles.nav}>
         <TouchableOpacity style={styles.navItem}>
           <Ionicons name="home-outline" size={24} color="#007bff" />
@@ -356,7 +418,10 @@ export default function PresupuestoMensualScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Modales */}
+      {/* ============================================
+          MODALES
+          Ventanas emergentes para agregar categoría y gasto
+          ============================================ */}
       <ModalAgregarCategoria visible={modalCategoria} onClose={() => setModalCategoria(false)} />
 
       <ModalAgregarGasto visible={modalGasto} onClose={() => setModalGasto(false)} categorias={categorias} />
@@ -364,9 +429,16 @@ export default function PresupuestoMensualScreen() {
   )
 }
 
+// ============================================
+// ESTILOS
+// Definición de todos los estilos del componente
+// ============================================
 const styles = StyleSheet.create({
+  // Contenedor principal
   container: { flex: 1, backgroundColor: "#e9f4ff" },
   gradient: { flex: 1 },
+
+  // Header azul superior
   headerAzul: {
     backgroundColor: "#4da6ff",
     flexDirection: "row",
@@ -386,6 +458,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
 
+  // Tarjeta de resumen
   resumen: { margin: 20, padding: 20, borderRadius: 12, marginTop: 100 },
   montoPrincipal: { fontSize: 40, fontWeight: "bold", marginBottom: 5 },
   footer: {
@@ -395,6 +468,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
 
+  // Contenedores de secciones
   contenedor: {
     marginHorizontal: 20,
     marginBottom: 15,
@@ -405,6 +479,7 @@ const styles = StyleSheet.create({
   },
   subtitulo: { fontSize: 15, fontWeight: "600", color: "#333", marginLeft: 8 },
 
+  // Alertas
   alerta: {
     flexDirection: "row",
     backgroundColor: "#fff3e0",
@@ -416,6 +491,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
+  // Botones de acción
   botonSecundario: {
     flex: 1,
     flexDirection: "row",
@@ -444,12 +520,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 
+  // Tarjetas de categoría
   card: { marginBottom: 20 },
   icono: { width: 36, height: 36, borderRadius: 18, justifyContent: "center", alignItems: "center" },
 
+  // Barra de progreso
   progressBar: { height: 6, backgroundColor: "#f0f0f0", borderRadius: 3, marginTop: 8 },
   progressFill: { height: "100%", borderRadius: 3 },
 
+  // Navegación inferior
   nav: {
     flexDirection: "row",
     backgroundColor: "#ffffff",
@@ -465,6 +544,7 @@ const styles = StyleSheet.create({
   },
   navItem: { flex: 1, alignItems: "center" },
 
+  // Estilos de modales
   modalOverlay: { flex: 1, backgroundColor: "rgba(77,166,255,0.3)", justifyContent: "center", padding: 20 },
   modalContent: { backgroundColor: "#fff", borderRadius: 16, maxHeight: "90%" },
   modalHeader: {
@@ -478,6 +558,7 @@ const styles = StyleSheet.create({
   modalBody: { padding: 20 },
   modalFooter: { flexDirection: "row", padding: 20, gap: 12, borderTopWidth: 1, borderTopColor: "#cfe3ff" },
 
+  // Campos de formulario
   label: { fontSize: 14, fontWeight: "600", color: "#333", marginBottom: 8, marginTop: 12 },
   input: {
     backgroundColor: "#ffffff",
@@ -489,6 +570,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 
+  // Grid de iconos y categorías
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 8 },
   iconoItem: {
     width: 60,
@@ -501,6 +583,7 @@ const styles = StyleSheet.create({
   },
   iconoSeleccionado: { borderColor: "#4da6ff", backgroundColor: "#e3f2fd" },
 
+  // Chips de categoría
   chip: {
     flexDirection: "row",
     alignItems: "center",
@@ -513,6 +596,7 @@ const styles = StyleSheet.create({
   },
   chipActivo: { backgroundColor: "#007bff", borderColor: "#007bff" },
 
+  // Botones de modal
   botonCancelar: {
     flex: 1,
     padding: 12,
@@ -524,6 +608,7 @@ const styles = StyleSheet.create({
   },
   botonAgregar: { flex: 1, padding: 12, borderRadius: 8, backgroundColor: "#007bff", alignItems: "center" },
 
+  // Utilidades de layout
   row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
   flex: { flex: 1, marginLeft: 12 },
 })
