@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View, Button } from 'react-native';
 import PantallaInicio from './PantallaInicio';
+import PantallaAcceso from './SessionScreen';
 import ScreensInicio from './ScreensInicio';
 import IngresosScreen from './IngresosScreen';
 import Presupuesto from './Presupuesto';
@@ -15,6 +16,8 @@ export default function Screens() {
   switch (screen) {
     case 'inicio':
       return <ScreensInicio />;
+    case 'SessionScreen':
+      return <PantallaAcceso />;
     case 'IngresosScreen':
       return <IngresosScreen />;
     case 'PresupuestoMensualScreen':
@@ -38,6 +41,7 @@ export default function Screens() {
           <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Menu de interfaces</Text>
 
           <Button onPress={() => setScreen('PantallaInicio')} title="Log in" />
+          <Button onPress={() => setScreen('SessionScreen')} title="Acceso" />
           <Button onPress={() => setScreen('Registro')} title="Registro" />
           <Button onPress={() => setScreen('inicio')} title="Inicio" />
           <Button onPress={() => setScreen('IngresosScreen')} title="Ingresos y transacciones" />
