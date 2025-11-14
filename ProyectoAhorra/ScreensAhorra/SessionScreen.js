@@ -47,6 +47,11 @@ export default function PantallaAcceso() {
           <Text style={styles.textoCheckbox}>Mostrar_contraseña</Text>
         </View>
 
+        
+        <TouchableOpacity onPress={() => {}} activeOpacity={0.6}>
+            <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.boton} onPress={iniciarSesion}>
           <Text style={styles.textoBoton}>INGRESAR</Text>
         </TouchableOpacity>
@@ -120,5 +125,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
+  },
+  olvidoContrasena: {
+    color: '#4D9FF3',         
+    fontSize: 15,
+    textAlign: 'center',      
+    marginBottom: 12,        
+    marginTop: 4,             
   },
 });
