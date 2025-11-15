@@ -47,6 +47,7 @@ export default function PantallaAcceso() {
           <Text style={styles.textoCheckbox}>Mostrar_contraseña</Text>
         </View>
 
+        
         <TouchableOpacity onPress={() => {}} activeOpacity={0.6}>
             <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
