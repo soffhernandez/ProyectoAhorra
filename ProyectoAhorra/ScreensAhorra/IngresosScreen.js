@@ -3,6 +3,61 @@ import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal }
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
 
+// =============================
+//  MODAL PARA FILTRAR CATEGORÍA
+// =============================
+const ModalFiltroCategoria = ({ visible, onClose }) => {
+  const categorias = ["Sueldo", "Alimentación", "Transporte", "Otros", "Entretenimiento"]
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalBox}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Filtrar por Categoría</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={26} color="#007bff" />
+            </TouchableOpacity>
+          </View>
+
+          {categorias.map((cat) => (
+            <TouchableOpacity key={cat} style={styles.modalOption}>
+              <Text style={styles.modalOptionText}>{cat}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+// =============================
+//     MODAL PARA FILTRAR FECHA
+// =============================
+const ModalFiltroFecha = ({ visible, onClose }) => {
+  const opcionesFecha = ["Hoy", "Últimos 7 días", "Este mes", "Mes anterior", "Este año"]
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalBox}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Filtrar por Fecha</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={26} color="#007bff" />
+            </TouchableOpacity>
+          </View>
+
+          {opcionesFecha.map((f) => (
+            <TouchableOpacity key={f} style={styles.modalOption}>
+              <Text style={styles.modalOptionText}>{f}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </Modal>
+  )
+}
 // ===============================
 // MODAL PARA AGREGAR TRANSACCIÓN
 // ===============================
@@ -123,6 +178,8 @@ export default function IngresosScreen() {
   const [modalEliminar, setModalEliminar] = useState(false)
   const [modalActualizar, setModalActualizar] = useState(false)
   const [transaccionSeleccionada, setTransaccionSeleccionada] = useState(null)
+  const [modalCategoria, setModalCategoria] = useState(false)
+  const [modalFecha, setModalFecha] = useState(false)
 
   const transaccionesEjemplo = [
     { id: "1", descripcion: "Salario mensual", monto: 3500, tipo: "Ingreso", categoria: "Sueldo", fecha: "20 de sep. 2025" },
@@ -181,6 +238,31 @@ export default function IngresosScreen() {
           <View style={styles.card}>
             <Text style={[styles.text, styles.bold, { fontSize: 18, marginBottom: 4, color: "#007bff" }]}>Historial de Transacciones</Text>
             <Text style={[styles.text, { fontSize: 13, color: "#4da6ff", marginBottom: 20 }]}>{transaccionesEjemplo.length} transacciones registradas</Text>
+            <View style={styles.filtroBloque}>
+              
+              {/* FILTROS */}
+              <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por fecha</Text>
+              <TouchableOpacity
+                style={[styles.filtroBoton, styles.filtroBotonEspaciado]}
+                onPress={() => setModalFecha(true)}
+              >
+                <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
+                  Seleccionar fecha
+                </Text>
+                <Ionicons name="calendar-outline" size={22} color="#4da6ff" />
+              </TouchableOpacity>
+
+              <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por categoría</Text>
+              <TouchableOpacity
+                style={[styles.filtroBoton, styles.filtroBotonCategoria]}
+                onPress={() => setModalCategoria(true)}
+              >
+                <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
+                  Seleccionar categoría
+                </Text>
+                <Ionicons name="filter-outline" size={22} color="#4da6ff" />
+              </TouchableOpacity>
+            </View>
 
             <FlatList
               data={transaccionesEjemplo}
@@ -252,6 +334,8 @@ export default function IngresosScreen() {
       </View>
 
       {/* MODALES */}
+      <ModalFiltroCategoria visible={modalCategoria} onClose={() => setModalCategoria(false)} />
+      <ModalFiltroFecha visible={modalFecha} onClose={() => setModalFecha(false)} />
       <ModalTransaccion visible={modalTransaccion} onClose={() => setModalTransaccion(false)} />
 
       <Modal visible={modalEditar} transparent animationType="fade" onRequestClose={() => setModalEditar(false)}>
@@ -329,4 +413,76 @@ const styles = StyleSheet.create({
   nav: { flexDirection: "row", backgroundColor: "#fff", paddingVertical: 10, paddingBottom: 20, borderTopWidth: 1, borderTopColor: "#cfe3ff", shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 10 },
   navItem: { flex: 1, alignItems: "center", justifyContent: "center" },
   modalOverlay: { flex: 1, backgroundColor: "rgba(77,166,255,0.3)", justifyContent: "center", alignItems: "center", padding: 20 },
+  filtroTitulo: {
+    fontSize: 15,
+    marginBottom: 8,
+    color: "#007bff",
+    fontWeight: "700",
+  },
+
+  filtroBloque: {
+    marginBottom: 20,
+  },
+
+  filtroBoton: {
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
+    paddingVertical: 14,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  filtroBotonEspaciado: {
+    marginBottom: 18,
+  },
+
+  filtroBotonCategoria: {
+    marginBottom: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+
+  modalBox: {
+    width: "100%",
+    backgroundColor: "#ffffff",
+    padding: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
+  },
+
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#007bff",
+  },
+
+  modalOption: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0edff",
+  },
+
+  modalOptionText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#4da6ff",
+  },
+
 })
