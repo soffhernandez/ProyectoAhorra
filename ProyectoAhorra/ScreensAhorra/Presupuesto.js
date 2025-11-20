@@ -3,6 +3,62 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Modal, TextInput 
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
 
+// =============================
+//  MODAL PARA FILTRAR CATEGORÍA
+// =============================
+const ModalFiltroCategoria = ({ visible, onClose }) => {
+  const categorias = ["Sueldo", "Alimentación", "Transporte", "Otros", "Entretenimiento"]
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalBox}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Filtrar por Categoría</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={26} color="#007bff" />
+            </TouchableOpacity>
+          </View>
+
+          {categorias.map((cat) => (
+            <TouchableOpacity key={cat} style={styles.modalOption}>
+              <Text style={styles.modalOptionText}>{cat}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+// =============================
+//     MODAL PARA FILTRAR FECHA
+// =============================
+const ModalFiltroFecha = ({ visible, onClose }) => {
+  const opcionesFecha = ["Hoy", "Últimos 7 días", "Este mes", "Mes anterior", "Este año"]
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalBox}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Filtrar por Fecha</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={26} color="#007bff" />
+            </TouchableOpacity>
+          </View>
+
+          {opcionesFecha.map((f) => (
+            <TouchableOpacity key={f} style={styles.modalOption}>
+              <Text style={styles.modalOptionText}>{f}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
 const ProgressBar = ({ progreso, color }) => (
   <View style={styles.progressBar}>
     <View style={[styles.progressFill, { width: `${Math.min(progreso, 100)}%`, backgroundColor: color }]} />
@@ -151,6 +207,8 @@ export default function PresupuestoMensualScreen() {
   const [nombreGasto, setNombreGasto] = useState("")
   const [montoGasto, setMontoGasto] = useState("")
   const [categoriaGasto, setCategoriaGasto] = useState("")
+  const [modalCategoria, setModalCategoria] = useState(false)
+  const [modalFecha, setModalFecha] = useState(false)
 
   const [gastos, setGastos] = useState([
     { id: "g1", categoriaId: "1", nombre: "Supermercado", monto: 2500 },
@@ -328,6 +386,7 @@ export default function PresupuestoMensualScreen() {
           </View>
 
           <View style={styles.contenedor}>
+            
             <View style={styles.row}>
               <TouchableOpacity style={styles.botonSecundario} onPress={() => setModalTipo('addCategoria')}>
                 <Ionicons name="add" size={18} color="#000" />
@@ -343,9 +402,31 @@ export default function PresupuestoMensualScreen() {
               <Text style={styles.txtGray}>Reiniciar Mes</Text>
             </TouchableOpacity>
           </View>
-
+          
           <View style={styles.contenedor}>
+          <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por fecha</Text>
+                        <TouchableOpacity
+                          style={[styles.filtroBoton, styles.filtroBotonEspaciado]}
+                          onPress={() => setModalFecha(true)}
+                        >
+                          <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
+                            Seleccionar fecha
+                          </Text>
+                          <Ionicons name="calendar-outline" size={22} color="#4da6ff" />
+                        </TouchableOpacity>
+          
+                        <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por categoría</Text>
+                        <TouchableOpacity
+                          style={[styles.filtroBoton, styles.filtroBotonCategoria]}
+                          onPress={() => setModalCategoria(true)}
+                        >
+                          <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
+                            Seleccionar categoría
+                          </Text>
+                          <Ionicons name="filter-outline" size={22} color="#4da6ff" />
+                        </TouchableOpacity>
             <Text style={styles.subtitulo}>Categorías ({categorias.length})</Text>
+        
             {categoriasConGastos.map(item => (
               <CategoriaCard
                 key={item.id}
@@ -466,6 +547,8 @@ export default function PresupuestoMensualScreen() {
           onConfirm={handleConfirmarReiniciar}
         />
       )}
+      <ModalFiltroCategoria visible={modalCategoria} onClose={() => setModalCategoria(false)} />
+      <ModalFiltroFecha visible={modalFecha} onClose={() => setModalFecha(false)} />
     </View>
   )
 }
@@ -859,5 +942,76 @@ const styles = StyleSheet.create({
     color: "#ff4d4d", 
     textAlign: "center", 
     marginBottom: 20 
+  },
+  filtroTitulo: {
+    fontSize: 15,
+    marginBottom: 8,
+    color: "#007bff",
+    fontWeight: "700",
+  },
+
+  filtroBloque: {
+    marginBottom: 20,
+  },
+
+  filtroBoton: {
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
+    paddingVertical: 14,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  filtroBotonEspaciado: {
+    marginBottom: 18,
+  },
+
+  filtroBotonCategoria: {
+    marginBottom: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+
+  modalBox: {
+    width: "100%",
+    backgroundColor: "#ffffff",
+    padding: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#cfe3ff",
+  },
+
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#007bff",
+  },
+
+  modalOption: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0edff",
+  },
+
+  modalOptionText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#4da6ff",
   },
 })
