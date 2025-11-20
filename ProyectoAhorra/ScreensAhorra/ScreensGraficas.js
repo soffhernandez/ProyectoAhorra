@@ -6,7 +6,6 @@ export default function Graficas() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="arrow-back-outline" size={26} color="#fff" />
         <Text style={styles.headerTitle}>Gráficas</Text>
         <View style={{ width: 26 }} />
       </View>
@@ -101,25 +100,6 @@ export default function Graficas() {
           </ScrollView>
         </View>
       </ScrollView>
-      
-      <View style={styles.bottomNav}>
-        <View style={styles.navItem}>
-          <Ionicons name="home-outline" size={24} color="#007bff" />
-          <Text style={styles.navText}>Inicio</Text>
-        </View>
-        <View style={styles.navItem}>
-          <Ionicons name="swap-horizontal-outline" size={24} color="#007bff" />
-          <Text style={styles.navText}>Transacciones</Text>
-        </View>
-        <View style={styles.navItem}>
-          <Ionicons name="wallet-outline" size={24} color="#007bff" />
-          <Text style={styles.navText}>Presupuesto</Text>
-        </View>
-        <View style={styles.navItem}>
-          <Ionicons name="stats-chart" size={24} color="#007bff" />
-          <Text style={styles.navText}>Gráficas</Text>
-        </View>
-      </View>
     </View>
   );
 }

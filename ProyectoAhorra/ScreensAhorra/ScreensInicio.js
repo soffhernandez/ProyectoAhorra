@@ -9,8 +9,7 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.greeting}>Hola, Usuario</Text>
         <View style={styles.headerIcons}>
-          <Ionicons name="help-circle-outline" size={24} color="#fff" style={styles.icon} />
-          <Ionicons name="menu-outline" size={28} color="#fff" />
+          <Ionicons name="person-outline" size={28} color="#fff" />
         </View>
       </View>
 
@@ -51,26 +50,6 @@ export default function App() {
           <Text style={styles.link}>Gestionar transacciones</Text>
         </View>
       </ScrollView>
-
-      {/* Barra de navegación inferior */}
-      <View style={styles.bottomNav}>
-        <View style={styles.navItem}>
-          <Ionicons name="home-outline" size={24} color="#007bff" />
-          <Text style={styles.navText}>Inicio</Text>
-        </View>
-        <View style={styles.navItem}>
-          <Ionicons name="swap-horizontal-outline" size={24} color="#007bff" />
-          <Text style={styles.navText}>Transacciones</Text>
-        </View>
-        <View style={styles.navItem}>
-          <Ionicons name="wallet-outline" size={24} color="#007bff" />
-          <Text style={styles.navText}>Presupuesto</Text>
-        </View>
-        <View style={styles.navItem}>
-          <Ionicons name="stats-chart" size={24} color="#007bff" />
-          <Text style={styles.navText}>Gráficas</Text>
-        </View>
-      </View>
     </View>
   );
 }

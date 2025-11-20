@@ -48,9 +48,6 @@ export default function PresupuestoMensualScreen() {
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.headerAzul}>
-        <TouchableOpacity style={{ position: "absolute", left: 20 }}>
-          <Ionicons name="arrow-back" size={26} color="#fff" />
-        </TouchableOpacity>
         <Text style={styles.tituloHeader}>Presupuesto mensual</Text>
       </View>
 
@@ -120,6 +117,7 @@ export default function PresupuestoMensualScreen() {
         </ScrollView>
       </LinearGradient>
 
+<<<<<<< Updated upstream
       {/* NAV */}
       <View style={styles.nav}>
         {[
@@ -134,6 +132,112 @@ export default function PresupuestoMensualScreen() {
           </TouchableOpacity>
         ))}
       </View>
+=======
+      {/* agregar/editar categoría */}
+      {(modalTipo === 'addCategoria' || modalTipo === 'editCategoria') && (
+        <FormModal
+          visible={true}
+          titulo={modalTipo === 'addCategoria' ? "Agregar Categoría" : "Editar Categoría"}
+          onClose={cerrarModal}
+          onSubmit={modalTipo === 'addCategoria' ? handleAgregarCategoria : handleGuardarEdicionCategoria}
+          fields={[
+            {
+              label: "Nombre de la Categoría",
+              placeholder: "Ej: Transporte",
+              value: nombreCategoria,
+              onChange: setNombreCategoria
+            },
+            {
+              label: "Presupuesto",
+              placeholder: "Ej: 3000",
+              keyboardType: "numeric",
+              value: totalCategoria,
+              onChange: setTotalCategoria
+            }
+          ]}
+        />
+      )}
+
+      {/* Agregar/Editar Gasto */}
+      {(modalTipo === 'addGasto' || modalTipo === 'editGasto') && (
+        <FormModal
+          visible={true}
+          titulo={modalTipo === 'addGasto' ? "Agregar Gasto" : "Editar Gasto"}
+          onClose={cerrarModal}
+          onSubmit={modalTipo === 'addGasto' ? handleAgregarGasto : handleGuardarEdicionGasto}
+          fields={[
+            {
+              label: "Nombre del Gasto",
+              placeholder: "Ej: Comida rápida",
+              value: nombreGasto,
+              onChange: setNombreGasto
+            },
+            {
+              label: "Monto",
+              placeholder: "Ej: 150",
+              keyboardType: "numeric",
+              value: montoGasto,
+              onChange: setMontoGasto
+            },
+            {
+              label: "Categoría",
+              type: "picker",
+              value: categoriaGasto,
+              onChange: setCategoriaGasto,
+              options: categorias
+            }
+          ]}
+        />
+      )}
+
+      {/* Confirmar eliminar categoría */}
+      {modalConfirm === 'deleteCategoria' && (
+        <ConfirmModal
+          visible={true}
+          titulo="Eliminar Categoría"
+          mensaje={`¿Estás seguro de que deseas eliminar la categoría "${itemSeleccionado?.nombre}"?`}
+          advertencia="Esta acción no se puede deshacer."
+          icono="trash-outline"
+          isDelete={true}
+          onClose={() => {
+            setModalConfirm(null)
+            setItemSeleccionado(null)
+          }}
+          onConfirm={handleConfirmarEliminarCategoria}
+        />
+      )}
+
+      {/*Confirmar eliminar gasto */}
+      {modalConfirm === 'deleteGasto' && (
+        <ConfirmModal
+          visible={true}
+          titulo="Eliminar Gasto"
+          mensaje={`¿Estás seguro de que deseas eliminar el gasto "${itemSeleccionado?.nombre}" de $${itemSeleccionado?.monto.toLocaleString("es-MX")}?`}
+          advertencia="Esta acción no se puede deshacer."
+          icono="trash-outline"
+          isDelete={true}
+          onClose={() => {
+            setModalConfirm(null)
+            setItemSeleccionado(null)
+          }}
+          onConfirm={handleConfirmarEliminarGasto}
+        />
+      )}
+
+      {/* Modal: Confirmar Reiniciar Mes */}
+      {modalConfirm === 'resetMes' && (
+        <ConfirmModal
+          visible={true}
+          titulo="Reiniciar Mes"
+          mensaje="¿Estás seguro de que deseas reiniciar el mes? Todos los gastos registrados se borrarán."
+          advertencia="Esta acción no se puede deshacer."
+          icono="refresh-outline"
+          isDelete={false}
+          onClose={() => setModalConfirm(null)}
+          onConfirm={handleConfirmarReiniciar}
+        />
+      )}
+>>>>>>> Stashed changes
     </View>
   )
 }

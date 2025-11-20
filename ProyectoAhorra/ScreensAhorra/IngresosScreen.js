@@ -5,6 +5,8 @@ import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal }
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
 
+
+
 // ===============================
 // MODAL PARA AGREGAR TRANSACCIÓN
 // ===============================
@@ -139,9 +141,6 @@ export default function IngresosScreen() {
       <LinearGradient colors={["#e9f4ff", "#e9f4ff"]} style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles.row, { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 15, backgroundColor: "#4da6ff" }]}> 
-            <TouchableOpacity>
-              <Ionicons name="arrow-back" size={28} color="#fff" />
-            </TouchableOpacity>
             <Text style={[styles.text, styles.bold, { fontSize: 22, color: "#fff" }]}>Ingresos y Transacciones</Text>
             <View style={{ width: 28 }} />
           </View>
@@ -229,29 +228,6 @@ export default function IngresosScreen() {
           <View style={{ height: 100 }} />
         </ScrollView>
       </LinearGradient>
-
-      {/* NAV BAR */}
-      <View style={styles.nav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="home-outline" size={26} color="#007bff" />
-          <Text style={[styles.text, styles.bold, { fontSize: 12, color: "#007bff", marginTop: 4 }]}>Inicio</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="swap-horizontal-outline" size={26} color="#4da6ff" />
-          <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>Transacciones</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="wallet-outline" size={26} color="#4da6ff" />
-          <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>Presupuesto</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="stats-chart" size={26} color="#4da6ff" />
-          <Text style={[styles.text, { fontSize: 12, color: "#4da6ff", marginTop: 4, fontWeight: "600" }]}>Gráficas</Text>
-        </TouchableOpacity>
-      </View>
 
       {/* MODALES */}
       <ModalTransaccion visible={modalTransaccion} onClose={() => setModalTransaccion(false)} />
