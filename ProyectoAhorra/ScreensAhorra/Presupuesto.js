@@ -289,9 +289,6 @@ export default function PresupuestoMensualScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerAzul}>
-        <TouchableOpacity style={{ position: "absolute", left: 20 }}>
-          <Ionicons name="arrow-back" size={26} color="#fff" />
-        </TouchableOpacity>
         <Text style={styles.tituloHeader}>Presupuesto mensual</Text>
       </View>
 
@@ -364,21 +361,7 @@ export default function PresupuestoMensualScreen() {
           </View>
         </ScrollView>
       </LinearGradient>
-
-      <View style={styles.nav}>
-        {[
-          ["home-outline", "Inicio"],
-          ["swap-horizontal-outline", "Transacciones"],
-          ["wallet-outline", "Presupuesto"],
-          ["stats-chart", "Gráficas"],
-        ].map(([icon, label]) => (
-          <TouchableOpacity key={label} style={styles.navItem}>
-            <Ionicons name={icon} size={24} color="#007bff" />
-            <Text style={styles.navTxt}>{label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
+      
       {/* agregar/editar categoría */}
       {(modalTipo === 'addCategoria' || modalTipo === 'editCategoria') && (
         <FormModal

@@ -1,22 +1,56 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Screens from './ScreensAhorra/Screens';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function App() {
+import ScreensInicio from './ScreensAhorra/ScreensInicio'; 
+import IngresosScreen from './ScreensAhorra/IngresosScreen';
+import Presupuesto from './ScreensAhorra/Presupuesto';
+import Graficas from './ScreensAhorra/ScreensGraficas';
+
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
   return (
-    <View style={styles.container}>
-      <Text>Proyecto Ahorra!</Text>
-      <Screens></Screens>
-      <StatusBar style="auto" />
-    </View>
+    <Tab.Navigator
+      initialRouteName="Inicio"
+      screenOptions={({ route }) => ({
+        headerShown: false, 
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === 'Inicio') {
+            iconName = 'home';
+          } else if (route.name === 'Ingresos') {
+            iconName = 'cash';
+          } else if (route.name === 'Presupuesto') {
+            iconName = 'wallet';
+          } else if (route.name === 'Gráficas') {
+            iconName = 'bar-chart';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#007BFF', 
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          paddingBottom: 5,
+          height: 60, 
+        },
+      })}
+    >
+
+      <Tab.Screen name="Inicio" component={ScreensInicio} />
+      <Tab.Screen name="Ingresos" component={IngresosScreen} />
+      <Tab.Screen name="Presupuesto" component={Presupuesto} />
+      <Tab.Screen name="Gráficas" component={Graficas} />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
+  );
+}
