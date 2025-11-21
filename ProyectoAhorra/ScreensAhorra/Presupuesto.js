@@ -79,10 +79,16 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
           <Text style={styles.catPorcentaje}>{Math.round(progreso)}%</Text>
           <View style={{ flexDirection: "row", gap: 6 }}>
             <TouchableOpacity onPress={onEditar}>
-              <Ionicons name="pencil" size={14} color="#fff" />
+
+
+              {/* // ACAAAAAAAAAAAA */}
+              <Ionicons name="pencil" size={14} color="#ad0808ff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onEliminar}>
-              <Ionicons name="trash" size={14} color="#fff" />
+
+
+              {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
+              <Ionicons name="trash" size={14} color="#ad0808ff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -101,9 +107,15 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
               </View>
               <View style={{ flexDirection: "row", gap: 8 }}>
                 <TouchableOpacity onPress={() => onEditarGasto(gasto)}>
+
+
+                  {/* // ACAAAAAAAAAAAAAAAAA */}
                   <Ionicons name="pencil" size={14} color="#ad0808ff" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onEliminarGasto(gasto)}>
+
+
+                  {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
                   <Ionicons name="trash" size={14} color="#ad0808ff" />
                 </TouchableOpacity>
               </View>
