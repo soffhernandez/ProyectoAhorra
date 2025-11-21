@@ -18,7 +18,7 @@ const ModalFiltroCategoria = ({ visible, onClose }) => {
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Filtrar por Categoría</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={26} color="#007bff" />
+              <Ionicons name="close" size={26} color="rgba(0, 123, 255, 1)" />
             </TouchableOpacity>
           </View>
 
@@ -194,12 +194,14 @@ export default function IngresosScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#e9f4ff", "#e9f4ff"]} style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[styles.row, { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 15, backgroundColor: "#4da6ff" }]}> 
-            <Text style={[styles.text, styles.bold, { fontSize: 22, color: "#fff" }]}>Ingresos y Transacciones</Text>
-            <View style={{ width: 28 }} />
-          </View>
-
+          {/* Header */}
+                <View style={styles.header}>
+                  <Text style={styles.greeting}>Transacciones</Text>
+                  <View style={styles.headerIcons}>
+                    <Ionicons name="person-outline" size={28} color="#fff" />
+                  </View>
+                </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
           {/* TARJETAS */}
           <View style={styles.row}>
             <View style={styles.cardSmall}>
@@ -373,7 +375,7 @@ export default function IngresosScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#e9f4ff", width: "100%", height: "100%" },
-  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 15, marginBottom: 20, gap: 10 },
+  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 15, marginBottom: 20, gap: 10, marginTop: 20 },
   section: { padding: 20 },
   text: { color: "#333" },
   bold: { fontWeight: "700" },
@@ -459,6 +461,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "#4da6ff",
+    
+  },
+   headerIcons: {
+    flexDirection: "row",
+  },
+  header: {
+    backgroundColor: "#4da6ff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    width: "100%",
+    elevation: 3,
+  },
+  greeting: {
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "700",
   },
 
 })

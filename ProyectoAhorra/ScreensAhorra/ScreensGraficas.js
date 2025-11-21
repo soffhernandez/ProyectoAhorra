@@ -5,10 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 export default function Graficas() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Gráficas</Text>
-        <View style={{ width: 26 }} />
-      </View>
+       <View style={styles.header}>
+          <Text style={styles.greeting}>Graficas</Text>
+            <View style={styles.headerIcons}>
+              <Ionicons name="person-outline" size={28} color="#fff" />
+            </View>
+         </View>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} alwaysBounceVertical={true}>
         <View style={styles.summaryRow}>
@@ -111,13 +113,14 @@ const styles = StyleSheet.create({
     height: "100%", },
 
   header: {
-    backgroundColor: "#4da6ff",
+   backgroundColor: "#4da6ff",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 15,
+    paddingVertical: 14,
+    width: "100%",
+    elevation: 3,
   },
   headerTitle: { color: "#fff", fontSize: 22, fontWeight: "700" },
 
@@ -235,4 +238,13 @@ const styles = StyleSheet.create({
   },
   navItem: { alignItems: "center" },
   navText: { fontSize: 13, color: "#007bff", marginTop: 3, fontWeight: "500" },
+  headerIcons: {
+    flexDirection: "row",
+  },
+  greeting: {
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "700",
+  },
+
 });

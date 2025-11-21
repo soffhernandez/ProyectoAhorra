@@ -2,6 +2,7 @@ import { useState } from "react"
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Modal, TextInput } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
+import DateTimePicker from "@react-native-community/datetimepicker"
 
 // =============================
 //  MODAL PARA FILTRAR CATEGORÍA
@@ -34,30 +35,51 @@ const ModalFiltroCategoria = ({ visible, onClose }) => {
 // =============================
 //     MODAL PARA FILTRAR FECHA
 // =============================
-const ModalFiltroFecha = ({ visible, onClose }) => {
-  const opcionesFecha = ["Hoy", "Últimos 7 días", "Este mes", "Mes anterior", "Este año"]
-
+const ModalFiltroFecha = ({
+  visible,
+  onClose,
+  fechaSeleccionada,
+  setFechaSeleccionada,
+  mostrarPicker,
+  setMostrarPicker
+}) => {
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalOverlay}>
         <View style={styles.modalBox}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Filtrar por Fecha</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={26} color="#007bff" />
-            </TouchableOpacity>
-          </View>
 
-          {opcionesFecha.map((f) => (
-            <TouchableOpacity key={f} style={styles.modalOption}>
-              <Text style={styles.modalOptionText}>{f}</Text>
-            </TouchableOpacity>
-          ))}
+          {mostrarPicker && (
+            <DateTimePicker
+              value={fechaSeleccionada}
+              mode="date"
+              display="calendar"
+              onChange={(event, selectedDate) => {
+                if (selectedDate) {
+                  setFechaSeleccionada(selectedDate);
+                }
+                setMostrarPicker(false); 
+              }}
+            />
+          )}
+
+          <TouchableOpacity
+            style={styles.aplicarBoton}
+            onPress={() => {
+              setMostrarPicker(false);  
+              onClose();                
+            }}
+          >
+            <Text style={styles.aplicarTexto}>Aplicar</Text>
+          </TouchableOpacity>
+
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
+
+
+
 
 const ProgressBar = ({ progreso, color }) => (
   <View style={styles.progressBar}>
@@ -82,13 +104,13 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
 
 
               {/* // ACAAAAAAAAAAAA */}
-              <Ionicons name="pencil" size={14} color="#ad0808ff" />
+              <Ionicons name="pencil" size={14} color="#007bff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onEliminar}>
 
 
               {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
-              <Ionicons name="trash" size={14} color="#ad0808ff" />
+              <Ionicons name="trash" size={14} color="#ff4d4d" />
             </TouchableOpacity>
           </View>
         </View>
@@ -110,13 +132,13 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
 
 
                   {/* // ACAAAAAAAAAAAAAAAAA */}
-                  <Ionicons name="pencil" size={14} color="#ad0808ff" />
+                  <Ionicons name="pencil" size={14} color="#007bff" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onEliminarGasto(gasto)}>
 
 
                   {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
-                  <Ionicons name="trash" size={14} color="#ad0808ff" />
+                  <Ionicons name="trash" size={14} color="#ff4d4d" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -220,7 +242,11 @@ export default function PresupuestoMensualScreen() {
   const [montoGasto, setMontoGasto] = useState("")
   const [categoriaGasto, setCategoriaGasto] = useState("")
   const [modalCategoria, setModalCategoria] = useState(false)
-  const [modalFecha, setModalFecha] = useState(false)
+  const [modalFecha, setModalFecha] = useState(false);
+  const [mostrarPicker, setMostrarPicker] = useState(false);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
+
+
 
   const [gastos, setGastos] = useState([
     { id: "g1", categoriaId: "1", nombre: "Supermercado", monto: 2500 },
@@ -358,8 +384,12 @@ export default function PresupuestoMensualScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerAzul}>
-        <Text style={styles.tituloHeader}>Presupuesto mensual</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Presupuesto mensual</Text>
+          <View style={styles.headerIcons}>
+            <Ionicons name="person-outline" size={28} color="#fff" />
+          </View>
       </View>
 
       <LinearGradient colors={["#e9f4ff", "#e9f4ff"]} style={styles.gradient}>
@@ -419,11 +449,15 @@ export default function PresupuestoMensualScreen() {
           <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por fecha</Text>
                         <TouchableOpacity
                           style={[styles.filtroBoton, styles.filtroBotonEspaciado]}
-                          onPress={() => setModalFecha(true)}
+                          onPress={() => {
+          setModalFecha(true);
+          setMostrarPicker(true);
+}}
                         >
                           <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
-                            Seleccionar fecha
+                              {fechaSeleccionada.toLocaleDateString("es-MX")}
                           </Text>
+
                           <Ionicons name="calendar-outline" size={22} color="#4da6ff" />
                         </TouchableOpacity>
           
@@ -559,9 +593,16 @@ export default function PresupuestoMensualScreen() {
           onConfirm={handleConfirmarReiniciar}
         />
       )}
-      <ModalFiltroCategoria visible={modalCategoria} onClose={() => setModalCategoria(false)} />
-      <ModalFiltroFecha visible={modalFecha} onClose={() => setModalFecha(false)} />
-    </View>
+      <ModalFiltroFecha
+        visible={modalFecha}
+        onClose={() => setModalFecha(false)}
+        fechaSeleccionada={fechaSeleccionada}
+        setFechaSeleccionada={setFechaSeleccionada}
+        mostrarPicker={mostrarPicker}
+        setMostrarPicker={setMostrarPicker}
+      />
+        <ModalFiltroCategoria visible={modalCategoria} onClose={() => setModalCategoria(false)} />
+      </View>
   )
 }
 
@@ -576,29 +617,12 @@ const styles = StyleSheet.create({
     flex: 1 
   },
   
-  // HEADER 
-  headerAzul: { 
-    backgroundColor: "#4da6ff", 
-    flexDirection: "row", 
-    alignItems: "center", 
-    justifyContent: "center", 
-    paddingVertical: 20, 
-    position: "absolute", 
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    zIndex: 1000 
-  },
-  tituloHeader: { 
-    fontSize: 20, 
-    fontWeight: "600", 
-    color: "#fff" 
-  },
+
   
   // CARD DE RESUMEN
   resumen: { 
     margin: 20, 
-    marginTop: 100, 
+    marginTop: 20, 
     padding: 20, 
     borderRadius: 12, 
     borderWidth: 1, 
@@ -1026,4 +1050,36 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#4da6ff",
   },
+    // HEADER 
+   headerIcons: {
+    flexDirection: "row",
+  },
+  header: {
+    backgroundColor: "#4da6ff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    width: "100%",
+    elevation: 3,
+  },
+  greeting: {
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "700",
+  },
+  
+  aplicarBoton: {
+  marginTop: 20,
+  paddingVertical: 12,
+  backgroundColor: "#007bff",
+  borderRadius: 10,
+},
+
+aplicarTexto: {
+  color: "#fff",
+  fontWeight: "700",
+  textAlign: "center",
+},
 })
