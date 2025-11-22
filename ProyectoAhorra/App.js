@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Pantallas
 import InicioScreen from './ScreensAhorra/PantallaInicio';
 import PantallaAcceso from './ScreensAhorra/SessionScreen';
+import PantallaRecuperacion from './ScreensAhorra/PantallaRecuperacionScreen';
 
 import ScreensInicio from './ScreensAhorra/ScreensInicio';
 import IngresosScreen from './ScreensAhorra/IngresosScreen';
@@ -47,6 +48,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="InicioApp" component={InicioScreen} />
         <Stack.Screen name="Acceso" component={PantallaAcceso} />
+        <Stack.Screen name="Recuperacion" component={PantallaRecuperacion} />
         <Stack.Screen name="AhorraMas" component={MyTabs} />
       </Stack.Navigator>
     </NavigationContainer>
