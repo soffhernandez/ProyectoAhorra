@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
-
-export default function PantallaInicio() {
+ 
+export default function InicioScreen({ navigation }) {
   return (
     <View style={styles.page}>
       <View style={styles.phoneContainer}>
@@ -19,13 +19,14 @@ export default function PantallaInicio() {
   </View>
 
 
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Acceso</Text>
-          </TouchableOpacity>
+       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Acceso')}>
+  <Text style={styles.buttonText}>Acceso</Text>
+</TouchableOpacity>
 
-          <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
-        </View>
+<TouchableOpacity onPress={() => navigation.navigate('Registro')}>
+  <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
+</TouchableOpacity>
+
       </View>
     </View>
   );
@@ -34,7 +35,7 @@ export default function PantallaInicio() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: '#cfe3ff',
+    backgroundColor: '#1e1e1e',
     justifyContent: 'center',
     alignItems: 'center',
   },
