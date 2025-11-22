@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView,} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import Checkbox from 'expo-checkbox';  // <-- si no lo tienes: npm install expo-checkbox
 
-export default function PantallaAcceso() {
+export default function PantallaAcceso({ navigation }) {
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -27,7 +27,7 @@ export default function PantallaAcceso() {
           value={usuario}
           onChangeText={setUsuario}
         />
-
+ 
         <Text style={styles.tituloCampo}>CONTRASEÑA</Text>
         <TextInput
           style={styles.entradaTexto}
@@ -39,22 +39,28 @@ export default function PantallaAcceso() {
         />
 
         <View style={styles.filaCheckbox}>
-          <Checkbox
-            value={mostrarContrasena}
-            onValueChange={setMostrarContrasena}
-            color={mostrarContrasena ? '#4D9FF3' : undefined}
-          />
-          <Text style={styles.textoCheckbox}>Mostrar_contraseña</Text>
-        </View>
+  <Checkbox
+    value={mostrarContrasena}
+    onValueChange={setMostrarContrasena}
+    color={mostrarContrasena ? '#4D9FF3' : undefined}
+  />
+  <Text style={styles.textoCheckbox}>Mostrar_contraseña</Text>
+</View>
 
-        
-        <TouchableOpacity onPress={() => {}} activeOpacity={0.6}>
-            <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
-        </TouchableOpacity>
+<TouchableOpacity 
+  onPress={() => navigation.navigate('Recuperacion')}
+>
 
-        <TouchableOpacity style={styles.boton} onPress={iniciarSesion}>
-          <Text style={styles.textoBoton}>INGRESAR</Text>
-        </TouchableOpacity>
+  <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
+</TouchableOpacity>
+
+       <TouchableOpacity 
+  style={styles.boton} 
+  onPress={() => navigation.navigate('AhorraMas')}
+>
+  <Text style={styles.textoBoton}>INGRESAR</Text>
+</TouchableOpacity>
+
 
       </View>
     </KeyboardAvoidingView>
@@ -64,20 +70,19 @@ export default function PantallaAcceso() {
 const styles = StyleSheet.create({
   contenedorPantalla: {
     flex: 1,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#8ad6f6ff',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
   },
 
   tarjeta: {
   width: '85%',
-  maxWidth: 380,          
+  maxWidth: 380,          // <-- limita tamaño en navegador / pantallas grandes
   backgroundColor: '#ffffff',
   padding: 22,
   borderRadius: 15,
-  elevation: 6,            
-  shadowColor: '#000',     
+  elevation: 6,
+  shadowColor: '#000',
   shadowOpacity: 0.2,
   shadowRadius: 6,
   shadowOffset: { height: 4, width: 0 },
