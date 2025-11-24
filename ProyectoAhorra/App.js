@@ -15,6 +15,7 @@ import Presupuesto from './ScreensAhorra/Presupuesto';
 import Graficas from './ScreensAhorra/ScreensGraficas';
 import PerfilScreen from "./ScreensAhorra/PerfilScreen";
 
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +55,7 @@ export default function App() {
         <Stack.Screen name="Registro" component={PantallaRegistro} />
         <Stack.Screen name="AhorraMas" component={MyTabs} />
          <Stack.Screen name="Perfil" component={PerfilScreen} />
+   
       </Stack.Navigator>
     </NavigationContainer>
   );

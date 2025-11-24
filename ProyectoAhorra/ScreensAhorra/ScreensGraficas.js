@@ -1,14 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Graficas() {
+   const navigation = useNavigation();
   return (
     <View style={styles.container}>
        <View style={styles.header}>
           <Text style={styles.greeting}>Graficas</Text>
             <View style={styles.headerIcons}>
-              <Ionicons name="person-outline" size={28} color="#fff" />
+    <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+  <Ionicons name="person-outline" size={28} color="#fff" />
+</TouchableOpacity>
+
             </View>
          </View>
 

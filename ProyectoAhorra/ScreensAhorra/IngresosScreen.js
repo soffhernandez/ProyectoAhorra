@@ -193,7 +193,7 @@ const ModalActualizar = ({ visible, onClose }) => {
 // =====================================
 // PANTALLA PRINCIPAL INGRESOS
 // =====================================
-export default function IngresosScreen() {
+export default function IngresosScreen({navigation}) {
   const [modalTransaccion, setModalTransaccion] = useState(false)
   const [modalEditar, setModalEditar] = useState(false)
   const [modalEliminar, setModalEliminar] = useState(false)
@@ -219,7 +219,9 @@ export default function IngresosScreen() {
                 <View style={styles.header}>
                   <Text style={styles.greeting}>Transacciones</Text>
                   <View style={styles.headerIcons}>
-                    <Ionicons name="person-outline" size={28} color="#fff" />
+                    <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+                   <Ionicons name="person-outline" size={28} color="#fff" />
+                  </TouchableOpacity>
                   </View>
                 </View>
           <ScrollView showsVerticalScrollIndicator={false}>
