@@ -84,8 +84,11 @@ export default function PantallaRegistro() {
             <Text style={styles.switchText}>Acepto términos y condiciones.</Text>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={registrarUsuario}>
-            <Text style={styles.buttonText}>REGISTRARSE</Text>
+               <TouchableOpacity 
+            style={styles.boton} 
+            onPress={() => navigation.navigate('AhorraMas')}
+          >
+            <Text style={styles.textoBoton}>INGRESAR</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>

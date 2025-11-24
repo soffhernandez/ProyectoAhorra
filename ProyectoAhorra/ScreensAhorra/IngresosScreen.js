@@ -2,6 +2,7 @@ import { useState } from "react"
 import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, Modal } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
+import DateTimePicker from "@react-native-community/datetimepicker"
 
 
 
@@ -36,30 +37,48 @@ const ModalFiltroCategoria = ({ visible, onClose }) => {
 // =============================
 //     MODAL PARA FILTRAR FECHA
 // =============================
-const ModalFiltroFecha = ({ visible, onClose }) => {
-  const opcionesFecha = ["Hoy", "Últimos 7 días", "Este mes", "Mes anterior", "Este año"]
-
+const ModalFiltroFecha = ({
+  visible,
+  onClose,
+  fechaSeleccionada,
+  setFechaSeleccionada,
+  mostrarPicker,
+  setMostrarPicker
+}) => {
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalOverlay}>
         <View style={styles.modalBox}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Filtrar por Fecha</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={26} color="#007bff" />
-            </TouchableOpacity>
-          </View>
 
-          {opcionesFecha.map((f) => (
-            <TouchableOpacity key={f} style={styles.modalOption}>
-              <Text style={styles.modalOptionText}>{f}</Text>
-            </TouchableOpacity>
-          ))}
+          {mostrarPicker && (
+            <DateTimePicker
+              value={fechaSeleccionada}
+              mode="date"
+              display="calendar"
+              onChange={(event, selectedDate) => {
+                if (selectedDate) {
+                  setFechaSeleccionada(selectedDate);
+                }
+                setMostrarPicker(false); 
+              }}
+            />
+          )}
+
+          <TouchableOpacity
+            style={styles.aplicarBoton}
+            onPress={() => {
+              setMostrarPicker(false);  
+              onClose();                
+            }}
+          >
+            <Text style={styles.aplicarTexto}>Aplicar</Text>
+          </TouchableOpacity>
+
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 // ===============================
 // MODAL PARA AGREGAR TRANSACCIÓN
 // ===============================
@@ -182,6 +201,8 @@ export default function IngresosScreen() {
   const [transaccionSeleccionada, setTransaccionSeleccionada] = useState(null)
   const [modalCategoria, setModalCategoria] = useState(false)
   const [modalFecha, setModalFecha] = useState(false)
+  const [mostrarPicker, setMostrarPicker] = useState(false);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
 
   const transaccionesEjemplo = [
     { id: "1", descripcion: "Salario mensual", monto: 3500, tipo: "Ingreso", categoria: "Sueldo", fecha: "20 de sep. 2025" },
@@ -242,16 +263,20 @@ export default function IngresosScreen() {
             <View style={styles.filtroBloque}>
               
               {/* FILTROS */}
-              <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por fecha</Text>
-              <TouchableOpacity
-                style={[styles.filtroBoton, styles.filtroBotonEspaciado]}
-                onPress={() => setModalFecha(true)}
-              >
-                <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
-                  Seleccionar fecha
-                </Text>
+               <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por fecha</Text>
+                  <TouchableOpacity
+                    style={[styles.filtroBoton, styles.filtroBotonEspaciado]}
+                        onPress={() => {
+                        setModalFecha(true);
+                        setMostrarPicker(true);
+                        }}
+                        >
+               <Text style={[styles.text, { fontWeight: "600", color: "#007bff" }]}>
+                    {fechaSeleccionada.toLocaleDateString("es-MX")}
+              </Text>
+              
                 <Ionicons name="calendar-outline" size={22} color="#4da6ff" />
-              </TouchableOpacity>
+                </TouchableOpacity>
 
               <Text style={[styles.text, styles.filtroTitulo]}>Filtrar por categoría</Text>
               <TouchableOpacity
@@ -368,6 +393,15 @@ export default function IngresosScreen() {
 
       {/* MODAL: ACTUALIZAR (SIMPLE) */}
       <ModalActualizar visible={modalActualizar} onClose={() => setModalActualizar(false)} />
+         <ModalFiltroFecha
+                visible={modalFecha}
+                onClose={() => setModalFecha(false)}
+                fechaSeleccionada={fechaSeleccionada}
+                setFechaSeleccionada={setFechaSeleccionada}
+                mostrarPicker={mostrarPicker}
+                setMostrarPicker={setMostrarPicker}
+              />
+                <ModalFiltroCategoria visible={modalCategoria} onClose={() => setModalCategoria(false)} />
 
     </View>
   )
@@ -480,6 +514,17 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 22,
     fontWeight: "700",
-  },
+  }, aplicarBoton: {
+  marginTop: 20,
+  paddingVertical: 12,
+  backgroundColor: "#007bff",
+  borderRadius: 10,
+},
+
+aplicarTexto: {
+  color: "#fff",
+  fontWeight: "700",
+  textAlign: "center",
+},
 
 })
