@@ -27,11 +27,16 @@ const Section = ({ icon, title, subtitle, children }) => (
   </View>
 );
 
-export default function ProfileScreen() {
+export default function PerfilScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Ionicons 
+          name="arrow-back" 
+          size={24} 
+          color="#fff"
+          onPress={() => navigation.navigate("AhorraMas", { screen: "Inicio" })}
+        />
         <Text style={styles.headerTitle}>Perfil</Text>
         <Ionicons name="search" size={22} color="#fff" />
       </View>
