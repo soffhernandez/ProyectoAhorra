@@ -1,23 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
 
-export default function PantallaRecuperacion() {
+export default function PantallaRecuperacion({ navigation }) {
   const [correo, setCorreo] = useState('');
 
   const recuperarContrasena = () => {
     console.log('Correo para recuperación:', correo);
-    // Aquí podrías integrar una API para enviar el correo de recuperación
+    // Aquí podrías integrar tu API de recuperación
   };
- 
+
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.contenedorPantalla}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.tarjeta}>
+        
+        {/* TÍTULO */}
         <Text style={styles.titulo}>Recuperar Contraseña</Text>
-
         <Text style={styles.subtitulo}>Ingresa tu correo electrónico</Text>
+
+        {/* INPUT CORREO */}
         <TextInput
           style={styles.entradaTexto}
           placeholder="Correo registrado"
@@ -27,12 +38,13 @@ export default function PantallaRecuperacion() {
           keyboardType="email-address"
         />
 
-        <TouchableOpacity 
-  style={styles.boton} 
-  onPress={() => navigation.navigate('AhorraMas')}
->
-  <Text style={styles.textoBoton}>Enviar instrucciones</Text>
-</TouchableOpacity>
+        {/* BOTÓN */}
+        <TouchableOpacity
+          style={styles.boton}
+          onPress={() => navigation.navigate('AhorraMas')}
+        >
+          <Text style={styles.textoBoton}>Enviar instrucciones</Text>
+        </TouchableOpacity>
 
       </View>
     </KeyboardAvoidingView>
@@ -46,31 +58,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   tarjeta: {
     width: '85%',
     maxWidth: 380,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     padding: 22,
     borderRadius: 15,
     elevation: 6,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    shadowOffset: { height: 4, width: 0 },
+    shadowOffset: { width: 0, height: 4 },
   },
+
   titulo: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 10,
     textAlign: 'center',
+    marginBottom: 10,
   },
+
   subtitulo: {
     fontSize: 14,
     color: '#555',
-    marginBottom: 8,
     textAlign: 'center',
+    marginBottom: 8,
   },
+
   entradaTexto: {
     borderWidth: 1,
     borderColor: '#D8D8D8',
@@ -80,12 +96,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 20,
   },
+
   boton: {
     backgroundColor: '#4D9FF3',
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
   },
+
   textoBoton: {
     color: '#fff',
     fontSize: 15,
