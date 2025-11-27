@@ -1,16 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
-export default function PantallaInicio() {
+export default function InicioScreen({ navigation }) {
   return (
     <View style={styles.page}>
       <View style={styles.phoneContainer}>
 
+        {/* Contenedor azul */}
+
         {/* CONTENEDOR AZUL */}
         <View style={styles.blueContainerWrapper}>
           <View style={styles.blueBackground} />
+
+          <View style={styles.blueContent}>
+            <Text style={styles.title}>¡AHORRA MÁS!</Text>
+
+            <Image
+              source={require('../assets/cerdito_sinfondo.png')}
+              style={styles.cerdito}
+            />
+          </View>
+        </View>
           
           <View style={styles.blueContent}>
             <Text style={styles.title}>¡AHORRA MÁS!</Text>
@@ -21,13 +40,24 @@ export default function PantallaInicio() {
           </View>
         </View>
 
+        {/* Botón Acceso */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Acceso')}
+        >
+          <Text style={styles.buttonText}>Acceso</Text>
+        </TouchableOpacity>
         {/* PARTE INFERIOR */}
         <View style={styles.bottomContainer}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Acceso</Text>
           </TouchableOpacity>
 
+        {/* Link Registro */}
+        <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
           <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
+        </TouchableOpacity>
+
         </View>
 
       </View>
@@ -38,7 +68,7 @@ export default function PantallaInicio() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: '#cfe3ff',
+    backgroundColor: '#1e1e1e',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -47,7 +77,7 @@ const styles = StyleSheet.create({
     width: 380,
     height: 750,
     backgroundColor: '#fff',
-    borderRadius: 25,
+    borderRadius: 0,
     alignItems: 'center',
     overflow: 'hidden',
 
@@ -55,6 +85,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 10,
+  },
+
+  blueContainerWrapper: {
+    width: '100%',
+    height: '65%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    position: 'relative',
   },
 
   blueContainerWrapper: {
@@ -76,7 +115,24 @@ const styles = StyleSheet.create({
     top: -300,
     left: '-25%',
   },
+  blueBackground: {
+    backgroundColor: '#00A6FF',
+    width: '150%',
+    height: '140%',
+    borderBottomRightRadius: 100,
+    transform: [{ rotate: '30deg' }],
+    position: 'absolute',
+    top: -300,
+    left: '-25%',
+  },
 
+  blueContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    height: '90%',
+  },
   blueContent: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -90,10 +146,24 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '900',
     textAlign: 'center',
+    width: '100%',
+    marginTop: -20,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 40,
+    fontWeight: '900',
+    textAlign: 'center',
     marginTop: -20,
     width: '100%',
   },
 
+  cerdito: {
+    width: 220,
+    height: 220,
+    position: 'absolute',
+    bottom: -40,
+    right: '5%',
   cerdito: {
     width: 220,
     height: 220,
@@ -120,6 +190,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 4,
+    marginTop: 20,
   },
 
   buttonText: {
@@ -131,5 +202,7 @@ const styles = StyleSheet.create({
   link: {
     color: '#7F3DFF',
     fontSize: 15,
+    marginTop: 12,
   },
 });
+
