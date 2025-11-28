@@ -7,6 +7,7 @@ export default function PantallaInicio() {
   return (
     <View style={styles.page}>
       <View style={styles.phoneContainer}>
+<<<<<<< HEAD
 
         {/* CONTENEDOR AZUL */}
         <View style={styles.blueContainerWrapper}>
@@ -30,6 +31,27 @@ export default function PantallaInicio() {
           <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
         </View>
 
+=======
+        <View style={styles.blueContainerWrapper}>
+          <View style={styles.blueBackground} />
+            <View style={styles.blueContent}>
+             <Text style={styles.title}>¡AHORRA MáS!</Text>
+          <Image
+            source={require('../assets/cerdito_sinfondo.png')}
+            style={styles.cerdito}
+         />
+     </View>
+  </View>
+
+
+        <View style={styles.bottomContainer}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Acceso</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
+        </View>
+>>>>>>> parent of f882f1b (Normalización PantallaInicio)
       </View>
     </View>
   );
@@ -56,29 +78,57 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 10,
   },
+blueContainerWrapper: {
+  width: '100%',
+  height: '65%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  position: 'relative',
+},
 
-  blueContainerWrapper: {
-    width: '100%',
-    height: '65%',
-    alignItems: 'center',
+blueBackground: {
+  backgroundColor: '#00A6FF',
+  width: '150%',
+  height: '140%',
+  borderBottomRightRadius: 100,
+  transform: [{ rotate: '30deg' }],
+  position: 'absolute',
+  top: -300,
+  left: '-25%',
+},
+
+blueContent: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'absolute',
+  width: '100%',
+  height: '90%',
+},
+
+title: {
+  color: '#fff',
+  fontSize: 40,
+  fontWeight: '900',
+  textAlign: 'center',
+  width: '100%',
+  marginTop: -20,
+},
+
+cerdito: {
+  width: 220,
+  height: 220,
+  position: 'absolute',
+  bottom: -40,
+  right: '5%',
+},
+
+
+  bottomContainer: {
+    flex: 1,
     justifyContent: 'center',
-    overflow: 'hidden',
-    position: 'relative',
-  },
-
-  blueBackground: {
-    backgroundColor: '#00A6FF',
-    width: '150%',
-    height: '140%',
-    borderBottomRightRadius: 100,
-    transform: [{ rotate: '30deg' }],
-    position: 'absolute',
-    top: -300,
-    left: '-25%',
-  },
-
-  blueContent: {
     alignItems: 'center',
+<<<<<<< HEAD
     justifyContent: 'center',
     position: 'absolute',
     width: '100%',
@@ -100,6 +150,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -40,
     right: '5%',
+=======
+    gap: 18,
+>>>>>>> parent of f882f1b (Normalización PantallaInicio)
   },
 
   bottomContainer: {
