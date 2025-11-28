@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView
-} from 'react-native';
-import Checkbox from 'expo-checkbox';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView,} from 'react-native';
+import Checkbox from 'expo-checkbox';  // <-- si no lo tienes: npm install expo-checkbox
 
-export default function SessionScreen() {
+export default function PantallaAcceso() {
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -22,12 +14,11 @@ export default function SessionScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.contenedorPantalla}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.contenedorPantalla}
     >
       <View style={styles.tarjeta}>
-
-        {/* USUARIO */}
+        
         <Text style={styles.tituloCampo}>USUARIO</Text>
         <TextInput
           style={styles.entradaTexto}
@@ -37,7 +28,6 @@ export default function SessionScreen() {
           onChangeText={setUsuario}
         />
 
-        {/* CONTRASEÑA */}
         <Text style={styles.tituloCampo}>CONTRASEÑA</Text>
         <TextInput
           style={styles.entradaTexto}
@@ -48,7 +38,6 @@ export default function SessionScreen() {
           onChangeText={setContrasena}
         />
 
-        {/* CHECKBOX MOSTRAR CONTRASEÑA */}
         <View style={styles.filaCheckbox}>
           <Checkbox
             value={mostrarContrasena}
@@ -58,14 +47,11 @@ export default function SessionScreen() {
           <Text style={styles.textoCheckbox}>Mostrar_contraseña</Text>
         </View>
 
-        {/* OLVIDO CONTRASEÑA */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => {}}>
-          <Text style={styles.olvidoContrasena}>
-            ¿Olvidaste tu contraseña?
-          </Text>
+        
+        <TouchableOpacity onPress={() => {}} activeOpacity={0.6}>
+            <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
 
-        {/* BOTÓN INGRESAR */}
         <TouchableOpacity style={styles.boton} onPress={iniciarSesion}>
           <Text style={styles.textoBoton}>INGRESAR</Text>
         </TouchableOpacity>
@@ -85,17 +71,18 @@ const styles = StyleSheet.create({
   },
 
   tarjeta: {
-    width: '85%',
-    maxWidth: 380,
-    backgroundColor: '#fff',
-    padding: 22,
-    borderRadius: 15,
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 4 },
-  },
+  width: '85%',
+  maxWidth: 380,          
+  backgroundColor: '#ffffff',
+  padding: 22,
+  borderRadius: 15,
+  elevation: 6,            
+  shadowColor: '#000',     
+  shadowOpacity: 0.2,
+  shadowRadius: 6,
+  shadowOffset: { height: 4, width: 0 },
+},
+
 
   tituloCampo: {
     fontSize: 14,
@@ -118,21 +105,13 @@ const styles = StyleSheet.create({
   filaCheckbox: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
     marginBottom: 18,
+    gap: 6,
   },
 
   textoCheckbox: {
     fontSize: 14,
     color: '#333',
-  },
-
-  olvidoContrasena: {
-    color: '#4D9FF3',
-    fontSize: 15,
-    textAlign: 'center',
-    marginTop: 4,
-    marginBottom: 12,
   },
 
   boton: {
@@ -146,5 +125,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
+  },
+  olvidoContrasena: {
+    color: '#4D9FF3',         
+    fontSize: 15,
+    textAlign: 'center',      
+    marginBottom: 12,        
+    marginTop: 4,             
   },
 });
