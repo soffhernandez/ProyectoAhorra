@@ -1,6 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, Alerta } from 'react-native';
-import Checkbox from 'expo-checkbox';  // <-- si no lo tienes: npm install expo-checkbox
+import React, { useState } from 'react'; 
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Platform, 
+  KeyboardAvoidingView, 
+  Alert 
+} from 'react-native';
+import Checkbox from 'expo-checkbox';  // si no lo tienes: npm install expo-checkbox
 
 export default function PantallaAcceso({ navigation }) {
   const [usuario, setUsuario] = useState('');
@@ -8,25 +17,19 @@ export default function PantallaAcceso({ navigation }) {
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
  const iniciarSesion = () => {
-    if (usuario.trim() === '') {
-      Alert.alert(
-        'Campo requerido',
-        'Por favor ingresa tu usuario o correo electrónico',
-        [{ text: 'OK' }]
-      );
-      return;
-    }
+  if (usuario.trim() === '') {
+    Alert.alert('Campo requerido', 'Por favor ingresa tu usuario o correo electrónico');
+    return;
+  }
 
-    if (contrasena.trim() === '') {
-      Alert.alert(
-        'Campo requerido',
-        'Por favor ingresa tu contraseña',
-        [{ text: 'OK' }]
-      );
-      return;
-    }
-    navigation.navigate('AhorraMas');
-  };
+  if (contrasena.trim() === '') {
+    Alert.alert('Campo requerido', 'Por favor ingresa tu contraseña');
+    return;
+  }
+
+  navigation.replace('AhorraMas'); // <-- ESTA ES LA CORRECTA
+};
+
 
   return (
     <KeyboardAvoidingView
@@ -91,17 +94,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tarjeta: {
-  width: '85%',
-  maxWidth: 380,          // <-- limita tamaño en navegador / pantallas grandes
-  backgroundColor: '#ffffff',
-  padding: 22,
-  borderRadius: 15,
-  elevation: 6,
-  shadowColor: '#000',
-  shadowOpacity: 0.2,
-  shadowRadius: 6,
-  shadowOffset: { height: 4, width: 0 },
-},
+    width: '85%',
+    maxWidth: 380,
+    backgroundColor: '#ffffff',
+    padding: 22,
+    borderRadius: 15,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { height: 4, width: 0 },
+  },
   tituloCampo: {
     fontSize: 14,
     fontWeight: 'bold',
@@ -133,6 +136,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 10,
   },
   textoBoton: {
     color: '#fff',
