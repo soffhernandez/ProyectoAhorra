@@ -15,22 +15,10 @@ export default function InicioScreen({ navigation }) {
     <View style={styles.page}>
       <View style={styles.phoneContainer}>
 
-        {/* Contenedor azul */}
-
         {/* CONTENEDOR AZUL */}
         <View style={styles.blueContainerWrapper}>
           <View style={styles.blueBackground} />
 
-          <View style={styles.blueContent}>
-            <Text style={styles.title}>¡AHORRA MÁS!</Text>
-
-            <Image
-              source={require('../assets/cerdito_sinfondo.png')}
-              style={styles.cerdito}
-            />
-          </View>
-        </View>
-          
           <View style={styles.blueContent}>
             <Text style={styles.title}>¡AHORRA MÁS!</Text>
             <Image
@@ -47,17 +35,20 @@ export default function InicioScreen({ navigation }) {
         >
           <Text style={styles.buttonText}>Acceso</Text>
         </TouchableOpacity>
+
         {/* PARTE INFERIOR */}
         <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Acceso')}
+          >
             <Text style={styles.buttonText}>Acceso</Text>
           </TouchableOpacity>
 
-        {/* Link Registro */}
-        <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
-          <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
-        </TouchableOpacity>
-
+          {/* Link Registro */}
+          <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
+            <Text style={styles.link}>¿Aún no tienes cuenta?</Text>
+          </TouchableOpacity>
         </View>
 
       </View>
@@ -96,25 +87,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
 
-  blueContainerWrapper: {
-    width: '100%',
-    height: '65%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    position: 'relative',
-  },
-
-  blueBackground: {
-    backgroundColor: '#00A6FF',
-    width: '150%',
-    height: '140%',
-    borderBottomRightRadius: 100,
-    transform: [{ rotate: '30deg' }],
-    position: 'absolute',
-    top: -300,
-    left: '-25%',
-  },
   blueBackground: {
     backgroundColor: '#00A6FF',
     width: '150%',
@@ -133,22 +105,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '90%',
   },
-  blueContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    height: '90%',
-  },
 
-  title: {
-    color: '#fff',
-    fontSize: 40,
-    fontWeight: '900',
-    textAlign: 'center',
-    width: '100%',
-    marginTop: -20,
-  },
   title: {
     color: '#fff',
     fontSize: 40,
@@ -158,12 +115,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
-  cerdito: {
-    width: 220,
-    height: 220,
-    position: 'absolute',
-    bottom: -40,
-    right: '5%',
   cerdito: {
     width: 220,
     height: 220,
@@ -205,4 +156,3 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 });
-
