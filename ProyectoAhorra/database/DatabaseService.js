@@ -4,7 +4,6 @@ import * as SQLite from 'expo-sqlite';
 class DatabaseService {
     constructor() {
         this.db = null;
-        this.storageKey = 'usuarios';
     }
 
     async initialize() {
@@ -20,66 +19,82 @@ class DatabaseService {
                     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
                 );
             `);
+            await this.db.execAsync(`
+                CREATE TABLE IF NOT EXISTS presupuestos (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    fecha TEXT NOT NULL,
+                    limite REAL NOT NULL,
+                    cantidad REAL NOT NULL
+                );
+            `);
+            await this.db.execAsync(`
+                CREATE TABLE IF NOT EXISTS transacciones (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    fecha TEXT NOT NULL,
+                    limite REAL NOT NULL,
+                    cantidad REAL NOT NULL
+                );
+            `);
         }
     }
 
-    async getAll() {
+    // Métodos para obtener todos los registros de cualquier tabla
+    async getAll(tableName) {
         if (Platform.OS === 'web') {
-            const data = localStorage.getItem(this.storageKey);
+            const data = localStorage.getItem(tableName);
             return data ? JSON.parse(data) : [];
         } else {
-            return await this.db.getAllAsync('SELECT * FROM usuarios ORDER BY id DESC');
+            const result = await this.db.getAllAsync(`SELECT * FROM ${tableName} ORDER BY id DESC`);
+            return result;
         }
     }
 
-    async add(nombre) {
+    // Métodos para agregar registros en cualquier tabla
+    async add(tableName, data) {
         if (Platform.OS === 'web') {
-            const usuarios = await this.getAll();
-
-            const nuevoUsuario = {
-                id: Date.now(),
-                nombre,
-                fecha_creacion: new Date().toISOString()
-            };
-
-            usuarios.unshift(nuevoUsuario);
-            localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
-            return nuevoUsuario;
-
+            const existingData = await this.getAll(tableName);
+            data.id = Date.now();
+            data.fecha_creacion = new Date().toISOString();
+            existingData.unshift(data);
+            localStorage.setItem(tableName, JSON.stringify(existingData));
+            return data;
         } else {
+            const columns = Object.keys(data).join(', ');
+            const values = Object.values(data);
+            const placeholders = values.map(() => '?').join(', ');
+
             const result = await this.db.runAsync(
-                'INSERT INTO usuarios (nombre) VALUES(?)',
-                nombre
+                `INSERT INTO ${tableName} (${columns}) VALUES(${placeholders})`,
+                values
             );
-            return {
-                id: result.lastInsertRowId,
-                nombre,
-                fecha_creacion: new Date().toISOString()
-            };
+            data.id = result.lastInsertRowId;
+            return data;
         }
     }
 
-    async update(id, nuevoNombre) {
+    // Método para actualizar cualquier registro de una tabla
+    async update(tableName, id, updatedData) {
         if (Platform.OS === 'web') {
-            const usuarios = await this.getAll();
-            const index = usuarios.findIndex(u => u.id === id);
-
+            const existingData = await this.getAll(tableName);
+            const index = existingData.findIndex(item => item.id === id);
             if (index === -1) return null;
 
-            usuarios[index].nombre = nuevoNombre;
+            existingData[index] = { ...existingData[index], ...updatedData };
+            localStorage.setItem(tableName, JSON.stringify(existingData));
 
-            localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
-
-            return usuarios[index];
-
+            return existingData[index];
         } else {
+            const columns = Object.keys(updatedData).map(key => `${key} = ?`).join(', ');
+            const values = Object.values(updatedData);
+            values.push(id);
+
             await this.db.runAsync(
-                'UPDATE usuarios SET nombre = ? WHERE id = ?',
-                [nuevoNombre, id]
+                `UPDATE ${tableName} SET ${columns} WHERE id = ?`,
+                values
             );
 
             const result = await this.db.getFirstAsync(
-                'SELECT * FROM usuarios WHERE id = ?',
+                `SELECT * FROM ${tableName} WHERE id = ?`,
                 id
             );
 
@@ -87,21 +102,18 @@ class DatabaseService {
         }
     }
 
-    async remove(id) {
+    // Método para eliminar cualquier registro de una tabla
+    async remove(tableName, id) {
         if (Platform.OS === 'web') {
-            const usuarios = await this.getAll();
-            const nuevos = usuarios.filter(u => u.id !== id);
-
-            localStorage.setItem(this.storageKey, JSON.stringify(nuevos));
-
+            const existingData = await this.getAll(tableName);
+            const newData = existingData.filter(item => item.id !== id);
+            localStorage.setItem(tableName, JSON.stringify(newData));
             return true;
-
         } else {
             await this.db.runAsync(
-                'DELETE FROM usuarios WHERE id = ?',
+                `DELETE FROM ${tableName} WHERE id = ?`,
                 id
             );
-
             return true;
         }
     }

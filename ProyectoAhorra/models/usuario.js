@@ -1,12 +1,13 @@
+// models/Usuario.js
+
 export class Usuario {
-    constructor(id, nombre, fechaCreacion) {
+    constructor(id, nombre, fecha_creacion) {
         this.id = id;
         this.nombre = nombre;
-        this.fechaCreacion = fechaCreacion || new Date().toISOString();
+        this.fecha_creacion = fecha_creacion;
     }
 
-    // Validaciones del modelo
-    static validar(nombre) {
+      static validar(nombre) {
         if (!nombre || nombre.trim().length === 0) {
             throw new Error('El nombre no puede estar vacío');
         }
