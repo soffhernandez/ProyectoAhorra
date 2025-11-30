@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Switch, KeyboardAvoidingView, Platform } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
-export default function PantallaRegistro() {
+export default function PantallaRegistro({navigation}) {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -24,7 +25,17 @@ export default function PantallaRegistro() {
           contentContainerStyle={styles.scrollCentered}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>DATOS PERSONALES</Text>
+        <View style={styles.header}>
+  <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => navigation.goBack()}
+  >
+    <Feather name="arrow-left" size={28} color="#000" />
+  </TouchableOpacity>
+
+  <Text style={styles.title}>DATOS PERSONALES</Text>
+</View>
+
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>NOMBRE COMPLETO</Text>
@@ -190,4 +201,18 @@ scrollCentered: {
     fontWeight: '600',
     fontSize: 15,
   },
+header: {
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+  marginBottom: 20,
+},
+backButton: {
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  padding: 5,
+},
+
 });

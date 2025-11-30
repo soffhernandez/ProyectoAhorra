@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Modal, TextInput } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
@@ -106,13 +107,13 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
 
 
               {/* // ACAAAAAAAAAAAA */}
-              <Ionicons name="pencil" size={14} color="#007bff" />
+              <Ionicons name="pencil" size={20} color="#007bff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onEliminar}>
 
 
               {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
-              <Ionicons name="trash" size={14} color="#ff4d4d" />
+              <Ionicons name="trash" size={20} color="#ff4d4d" />
             </TouchableOpacity>
           </View>
         </View>
@@ -134,13 +135,13 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
 
 
                   {/* // ACAAAAAAAAAAAAAAAAA */}
-                  <Ionicons name="pencil" size={14} color="#007bff" />
+                  <Ionicons name="pencil" size={20} color="#007bff" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onEliminarGasto(gasto)}>
 
 
                   {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
-                  <Ionicons name="trash" size={14} color="#ff4d4d" />
+                  <Ionicons name="trash" size={20} color="#ff4d4d" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -747,9 +748,11 @@ const styles = StyleSheet.create({
   // CARDS DE CATEGORÍAS
   card: { 
     marginBottom: 20, 
-    backgroundColor: "#4da6ff", 
+    backgroundColor: "#f0f6ff", 
     borderRadius: 12, 
-    padding: 15 
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#cfe3ff"
   },
   icono: { 
     width: 36, 
@@ -761,20 +764,20 @@ const styles = StyleSheet.create({
   catTitulo: { 
     fontSize: 14, 
     fontWeight: "600", 
-    color: "#fff" 
+    color: "#007bff" 
   },
   catTexto: { 
     fontSize: 12, 
-    color: "#fff" 
+    color: "#007bff" 
   },
   catPorcentaje: { 
     fontSize: 13, 
     fontWeight: "600", 
-    color: "#fff" 
+    color: "#007bff" 
   },
   catRestante: { 
     fontSize: 12, 
-    color: "#fff", 
+    color: "#007bff", 
     marginTop: 8 
   },
   
@@ -795,11 +798,11 @@ const styles = StyleSheet.create({
     marginTop: 12, 
     paddingTop: 12, 
     borderTopWidth: 1, 
-    borderTopColor: "rgba(255, 255, 255, 0.3)" 
+    borderTopColor: "#cfe3ff" 
   },
   gastosListaTitulo: { 
     fontSize: 11, 
-    color: "#fff", 
+    color: "#007bff", 
     fontWeight: "600", 
     marginBottom: 8, 
     opacity: 0.9 
@@ -808,19 +811,21 @@ const styles = StyleSheet.create({
     flexDirection: "row", 
     alignItems: "center", 
     justifyContent: "space-between", 
-    backgroundColor: "rgba(255, 255, 255, 0.15)", 
+    backgroundColor: "#f0f6ff", 
     padding: 10, 
     borderRadius: 8, 
-    marginBottom: 6 
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: "#cfe3ff"
   },
   gastoNombre: { 
     fontSize: 12, 
-    color: "#fff", 
+    color: "#007bff", 
     fontWeight: "500" 
   },
   gastoMonto: { 
     fontSize: 11, 
-    color: "#fff", 
+    color: "#007bff", 
     opacity: 0.9 
   },
   

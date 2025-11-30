@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
-export default function PantallaRecuperacion() {
+
+export default function PantallaRecuperacion({ navigation }) {
   const [correo, setCorreo] = useState('');
 
   const recuperarContrasena = () => {
     console.log('Correo para recuperación:', correo);
-    // Aquí podrías integrar una API para enviar el correo de recuperación
   };
  
   return (
@@ -15,6 +16,18 @@ export default function PantallaRecuperacion() {
       style={styles.contenedorPantalla}
     >
       <View style={styles.tarjeta}>
+       <View style={styles.header}>
+  <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => navigation.goBack()}
+  >
+    <Feather name="arrow-left" size={28} color="#000" />
+  </TouchableOpacity>
+
+  <Text style={styles.titulo}>Recuperar Contraseña</Text>
+</View>
+
+
         <Text style={styles.titulo}>Recuperar Contraseña</Text>
 
         <Text style={styles.subtitulo}>Ingresa tu correo electrónico</Text>
@@ -58,13 +71,15 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { height: 4, width: 0 },
   },
-  titulo: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
+ titulo: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: '#333',
+  textAlign: 'center',
+  marginBottom: 10,
+  marginTop: 5,   
+},
+
   subtitulo: {
     fontSize: 14,
     color: '#555',
@@ -91,4 +106,31 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  botonRegresar: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 10,
+},
+
+iconoRegresar: {
+  fontSize: 20,
+  marginRight: 6,
+  marginTop: 2,
+},
+
+header: {
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+  marginBottom: 20,
+},
+backButton: {
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  padding: 5,
+},
+
+
 });

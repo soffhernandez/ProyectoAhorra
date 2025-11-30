@@ -80,7 +80,10 @@ export default function PerfilScreen({navigation}) {
         </TouchableOpacity>
       </ScrollView>
 
-      <View style={styles.bottomBar}>
+
+
+{/* SE ME HACE INNECESARIO PEROOO LO PONGO COMO COMENTARIO */}
+      {/* <View style={styles.bottomBar}>
         {[
           ['home-outline', 'Inicio'],
           ['swap-horizontal-outline', 'Transacciones'],
@@ -92,7 +95,7 @@ export default function PerfilScreen({navigation}) {
             <Text style={styles.bottomText}>{label}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </View> */}
     </View>
   );
 }

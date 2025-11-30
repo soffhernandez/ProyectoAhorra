@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, Alerta } from 'react-native';
 import Checkbox from 'expo-checkbox';  // <-- si no lo tienes: npm install expo-checkbox
 
 export default function PantallaAcceso({ navigation }) {
@@ -7,9 +7,25 @@ export default function PantallaAcceso({ navigation }) {
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
-  const iniciarSesion = () => {
-    console.log('Usuario:', usuario);
-    console.log('Contraseña:', contrasena);
+ const iniciarSesion = () => {
+    if (usuario.trim() === '') {
+      Alert.alert(
+        'Campo requerido',
+        'Por favor ingresa tu usuario o correo electrónico',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    if (contrasena.trim() === '') {
+      Alert.alert(
+        'Campo requerido',
+        'Por favor ingresa tu contraseña',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+    navigation.navigate('AhorraMas');
   };
 
   return (
@@ -26,6 +42,8 @@ export default function PantallaAcceso({ navigation }) {
           placeholderTextColor="#A0A0A0"
           value={usuario}
           onChangeText={setUsuario}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
  
         <Text style={styles.tituloCampo}>CONTRASEÑA</Text>
@@ -39,28 +57,26 @@ export default function PantallaAcceso({ navigation }) {
         />
 
         <View style={styles.filaCheckbox}>
-  <Checkbox
-    value={mostrarContrasena}
-    onValueChange={setMostrarContrasena}
-    color={mostrarContrasena ? '#4D9FF3' : undefined}
-  />
-  <Text style={styles.textoCheckbox}>Mostrar_contraseña</Text>
-</View>
+          <Checkbox
+            value={mostrarContrasena}
+            onValueChange={setMostrarContrasena}
+            color={mostrarContrasena ? '#4D9FF3' : undefined}
+          />
+          <Text style={styles.textoCheckbox}>Mostrar contraseña</Text>
+        </View>
 
-<TouchableOpacity 
-  onPress={() => navigation.navigate('Recuperacion')}
->
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('Recuperacion')}
+        >
+          <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
+        </TouchableOpacity>
 
-  <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
-</TouchableOpacity>
-
-       <TouchableOpacity 
-  style={styles.boton} 
-  onPress={() => navigation.navigate('AhorraMas')}
->
-  <Text style={styles.textoBoton}>INGRESAR</Text>
-</TouchableOpacity>
-
+        <TouchableOpacity 
+          style={styles.boton} 
+          onPress={iniciarSesion}
+        >
+          <Text style={styles.textoBoton}>INGRESAR</Text>
+        </TouchableOpacity>
 
       </View>
     </KeyboardAvoidingView>
@@ -74,7 +90,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   tarjeta: {
   width: '85%',
   maxWidth: 380,          // <-- limita tamaño en navegador / pantallas grandes
@@ -87,8 +102,6 @@ const styles = StyleSheet.create({
   shadowRadius: 6,
   shadowOffset: { height: 4, width: 0 },
 },
-
-
   tituloCampo: {
     fontSize: 14,
     fontWeight: 'bold',
@@ -96,7 +109,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 4,
   },
-
   entradaTexto: {
     borderWidth: 1,
     borderColor: '#D8D8D8',
@@ -106,26 +118,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
   },
-
   filaCheckbox: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 18,
     gap: 6,
   },
-
   textoCheckbox: {
     fontSize: 14,
     color: '#333',
   },
-
   boton: {
     backgroundColor: '#1A1A1A',
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
   },
-
   textoBoton: {
     color: '#fff',
     fontSize: 15,
