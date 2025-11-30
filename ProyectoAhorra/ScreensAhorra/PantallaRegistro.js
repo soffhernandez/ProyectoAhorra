@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Switch,
-  KeyboardAvoidingView,
-  Platform
-} from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Switch, KeyboardAvoidingView, Platform } from 'react-native';
 
 export default function PantallaRegistro() {
   const [nombre, setNombre] = useState('');
@@ -18,102 +8,87 @@ export default function PantallaRegistro() {
   const [confirmar, setConfirmar] = useState('');
   const [telefono, setTelefono] = useState('');
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
+  const [nose, setNose] = useState(false);
 
   function registrarUsuario() {
-    alert(`Registro completo:\n${nombre}\n${correo}`);
+    alert('Registro completo:\n' + nombre + '\n' + correo);
   }
 
   return (
     <View style={styles.page}>
-      <View style={styles.phoneContainer}>
-
-        <KeyboardAvoidingView
-          style={styles.centeredContainer}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+       <View style={styles.phoneContainer}>
+      <KeyboardAvoidingView
+        style={styles.centeredContainer}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollCentered}
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-            contentContainerStyle={styles.scrollCentered}
-            showsVerticalScrollIndicator={false}
-          >
+          <Text style={styles.title}>DATOS PERSONALES</Text>
 
-            <Text style={styles.title}>DATOS PERSONALES</Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>NOMBRE COMPLETO</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Tu nombre"
+              value={nombre}
+              onChangeText={setNombre}
+            />
+          </View>
 
-            {/* NOMBRE */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>NOMBRE COMPLETO</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Tu nombre"
-                value={nombre}
-                onChangeText={setNombre}
-              />
-            </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>CORREO</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="ejemplo@gmail.com"
+              value={correo}
+              onChangeText={setCorreo}
+            />
+          </View>
 
-            {/* CORREO */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>CORREO</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="ejemplo@gmail.com"
-                value={correo}
-                onChangeText={setCorreo}
-              />
-            </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>CONTRASEÑA</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              placeholder=""
+              value={contrasena}
+              onChangeText={setContrasena}
+            />
+          </View>
 
-            {/* CONTRASEÑA */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>CONTRASEÑA</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                value={contrasena}
-                onChangeText={setContrasena}
-              />
-            </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>CONFIRMAR CONTRASEÑA</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              placeholder=""
+              value={confirmar}
+              onChangeText={setConfirmar}
+            />
+          </View>
 
-            {/* CONFIRMAR CONTRASEÑA */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>CONFIRMAR CONTRASEÑA</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                value={confirmar}
-                onChangeText={setConfirmar}
-              />
-            </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>TELÉFONO</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="(000) 000 0000"
+              value={telefono}
+              onChangeText={setTelefono}
+              keyboardType="phone-pad"
+            />
+          </View>
 
-            {/* TELEFONO */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>TELÉFONO</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="(000) 000 0000"
-                value={telefono}
-                onChangeText={setTelefono}
-                keyboardType="phone-pad"
-              />
-            </View>
+          <View style={styles.switchContainer}>
+            <Switch value={aceptaTerminos} onValueChange={setAceptaTerminos} />
+            <Text style={styles.switchText}>Acepto términos y condiciones.</Text>
+          </View>
 
-            {/* TÉRMINOS Y CONDICIONES */}
-            <View style={styles.switchContainer}>
-              <Switch
-                value={aceptaTerminos}
-                onValueChange={setAceptaTerminos}
-              />
-              <Text style={styles.switchText}>Acepto términos y condiciones.</Text>
-            </View>
-
-            {/* BOTÓN */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={registrarUsuario}
-            >
-              <Text style={styles.buttonText}>REGISTRARSE</Text>
-            </TouchableOpacity>
-
-          </ScrollView>
-        </KeyboardAvoidingView>
-
+          <TouchableOpacity style={styles.button} onPress={registrarUsuario}>
+            <Text style={styles.buttonText}>REGISTRARSE</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
       </View>
     </View>
   );
@@ -141,31 +116,33 @@ const styles = StyleSheet.create({
   },
 
   centeredContainer: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'stretch',
-  },
+  flex: 1,
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'stretch',
+},
 
-  scrollCentered: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingVertical: 40,
-    paddingHorizontal: 25,
-    width: '100%',
-  },
+scrollCentered: {
+  justifyContent: 'center',
+  alignItems: 'stretch', 
+  flexGrow: 1,
+  paddingVertical: 40,
+  paddingHorizontal: 25,
+  width: '100%',
+},
+
 
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
     marginBottom: 30,
+    textAlign: 'center',
     color: '#000',
   },
 
   inputGroup: {
     width: '90%',
     marginBottom: 18,
-    alignSelf: 'center',
   },
 
   label: {
@@ -182,21 +159,21 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     fontSize: 14,
+    width: '100%',
     backgroundColor: '#fff',
+    marginBottom: 18,
   },
 
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '90%',
     marginBottom: 12,
-    alignSelf: 'center',
+    width: '90%',
   },
 
   switchText: {
     marginLeft: 8,
     fontSize: 14,
-    color: '#333',
   },
 
   button: {
@@ -204,9 +181,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingVertical: 14,
     alignItems: 'center',
-    width: '90%',
-    alignSelf: 'center',
     marginTop: 25,
+    width: '90%',
   },
 
   buttonText: {
