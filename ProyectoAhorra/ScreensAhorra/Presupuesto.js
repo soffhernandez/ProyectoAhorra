@@ -106,13 +106,13 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
 
 
               {/* // ACAAAAAAAAAAAA */}
-              <Ionicons name="pencil" size={14} color="#007bff" />
+              <Ionicons name="pencil" size={20} color="#007bff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={onEliminar}>
 
 
               {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
-              <Ionicons name="trash" size={14} color="#ff4d4d" />
+              <Ionicons name="trash" size={20} color="#ff4d4d" />
             </TouchableOpacity>
           </View>
         </View>
@@ -134,13 +134,13 @@ const CategoriaCard = ({ nombre, gastado, total, restante, progreso, icono, colo
 
 
                   {/* // ACAAAAAAAAAAAAAAAAA */}
-                  <Ionicons name="pencil" size={14} color="#007bff" />
+                  <Ionicons name="pencil" size={20} color="#007bff" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onEliminarGasto(gasto)}>
 
 
                   {/* // AQUIIIIIIIIIIIIIIIIIIIIIII */}
-                  <Ionicons name="trash" size={14} color="#ff4d4d" />
+                  <Ionicons name="trash" size={20} color="#ff4d4d" />
                 </TouchableOpacity>
               </View>
             </View>
