@@ -8,10 +8,15 @@ class DatabaseService {
     this.presupuestosKey = "presupuestos"
     this.categoriasKey = "categorias"
     this.gastosKey = "gastos"
+    this.isWebPlatform = Platform.OS === "web"
+  }
+
+  isWeb() {
+    return this.isWebPlatform
   }
 
   async initialize() {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       console.log("Usando LocalStorage para web")
     } else {
       console.log("Usando SQLite para móvil")
@@ -21,7 +26,7 @@ class DatabaseService {
   }
 
   async crearTablas() {
-    if (Platform.OS === "web") return
+    if (this.isWeb()) return
 
     await this.db.execAsync(`
             CREATE TABLE IF NOT EXISTS usuarios (
@@ -60,7 +65,7 @@ class DatabaseService {
 
   // ============ USUARIOS ============
   async getAll() {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const data = localStorage.getItem(this.storageKey)
       return data ? JSON.parse(data) : []
     } else {
@@ -69,7 +74,7 @@ class DatabaseService {
   }
 
   async add(nombre) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const usuarios = await this.getAll()
       const nuevoUsuario = {
         id: Date.now(),
@@ -90,7 +95,7 @@ class DatabaseService {
   }
 
   async update(id, nuevoNombre) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const usuarios = await this.getAll()
       const index = usuarios.findIndex((u) => u.id === id)
       if (index === -1) return null
@@ -105,7 +110,7 @@ class DatabaseService {
   }
 
   async remove(id) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const usuarios = await this.getAll()
       const nuevos = usuarios.filter((u) => u.id !== id)
       localStorage.setItem(this.storageKey, JSON.stringify(nuevos))
@@ -118,7 +123,7 @@ class DatabaseService {
 
   // ============ CATEGORÍAS ============
   async getCategorias() {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const data = localStorage.getItem(this.categoriasKey)
       return data ? JSON.parse(data) : []
     } else {
@@ -127,7 +132,7 @@ class DatabaseService {
   }
 
   async agregarCategoria(nombre, total, iconoNombre = "pricetag", iconoColor = "#4da6ff") {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const categorias = await this.getCategorias()
       const nueva = {
         id: Date.now().toString(),
@@ -161,7 +166,7 @@ class DatabaseService {
   }
 
   async modificarCategoria(id, nombre, total) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const categorias = await this.getCategorias()
       const index = categorias.findIndex((c) => c.id.toString() === id.toString())
       if (index !== -1) {
@@ -183,7 +188,7 @@ class DatabaseService {
   }
 
   async eliminarCategoria(id) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const categorias = await this.getCategorias()
       const filtrado = categorias.filter((c) => c.id.toString() !== id.toString())
       localStorage.setItem(this.categoriasKey, JSON.stringify(filtrado))
@@ -205,7 +210,7 @@ class DatabaseService {
 
   // ============ GASTOS ============
   async getGastos() {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const data = localStorage.getItem(this.gastosKey)
       return data ? JSON.parse(data) : []
     } else {
@@ -214,7 +219,7 @@ class DatabaseService {
   }
 
   async agregarGasto(categoriaId, nombre, monto) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const gastos = await this.getGastos()
       const nuevo = {
         id: Date.now().toString(),
@@ -245,7 +250,7 @@ class DatabaseService {
   }
 
   async modificarGasto(id, categoriaId, nombre, monto) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const gastos = await this.getGastos()
       const index = gastos.findIndex((g) => g.id.toString() === id.toString())
       if (index !== -1) {
@@ -270,7 +275,7 @@ class DatabaseService {
   }
 
   async eliminarGasto(id) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const gastos = await this.getGastos()
       const filtrado = gastos.filter((g) => g.id.toString() !== id.toString())
       localStorage.setItem(this.gastosKey, JSON.stringify(filtrado))
@@ -282,7 +287,7 @@ class DatabaseService {
   }
 
   async eliminarTodosGastos() {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       localStorage.setItem(this.gastosKey, "[]")
       return true
     } else {
@@ -293,7 +298,7 @@ class DatabaseService {
 
   // ============ PRESUPUESTOS (legacy) ============
   async agregarPresupuesto(nombre, total = 1000) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const presupuestos = JSON.parse(localStorage.getItem(this.presupuestosKey) || "[]")
       const id = Date.now()
       const nuevo = { id, nombre, gastado: 0, total, fecha_creacion: new Date().toISOString() }
@@ -307,7 +312,7 @@ class DatabaseService {
   }
 
   async getPresupuestos() {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       return JSON.parse(localStorage.getItem(this.presupuestosKey) || "[]")
     } else {
       return await this.db.getAllAsync("SELECT * FROM presupuestos")
@@ -315,7 +320,7 @@ class DatabaseService {
   }
 
   async modificarPresupuesto(id, nombre, total) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const presupuestos = JSON.parse(localStorage.getItem(this.presupuestosKey) || "[]")
       const index = presupuestos.findIndex((p) => p.id === id)
       if (index !== -1) {
@@ -332,7 +337,7 @@ class DatabaseService {
   }
 
   async eliminarPresupuesto(id) {
-    if (Platform.OS === "web") {
+    if (this.isWeb()) {
       const presupuestos = JSON.parse(localStorage.getItem(this.presupuestosKey) || "[]")
       const filtrado = presupuestos.filter((p) => p.id !== id)
       localStorage.setItem(this.presupuestosKey, JSON.stringify(filtrado))
