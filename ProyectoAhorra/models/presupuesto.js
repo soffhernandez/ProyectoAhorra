@@ -1,5 +1,4 @@
-
-import DatabaseService from "../database/DatabaseService"
+import DatabaseService from "../database/DatabaseServicePre"
 
 // ============================================
 // MODEL: CATEGORIA
@@ -56,7 +55,6 @@ class Categoria {
     }
   }
 
-  // Guardar (crear o actualizar)
   async save() {
     const validation = this.validate()
     if (!validation.isValid) {
@@ -73,7 +71,6 @@ class Categoria {
     return this
   }
 
-  // Eliminar
   async delete() {
     if (!this.id) {
       throw new Error("No se puede eliminar una categoría sin ID")
@@ -81,13 +78,11 @@ class Categoria {
     await DatabaseService.eliminarCategoria(this.id)
   }
 
-  // Obtener gastos de esta categoría
   async getGastos() {
     const todosGastos = await Gasto.findAll()
     return todosGastos.filter((g) => g.categoriaId === this.id)
   }
 
-  // Calcular totales
   async calcularEstadisticas() {
     const gastos = await this.getGastos()
     const gastado = gastos.reduce((sum, g) => sum + g.monto, 0)
@@ -102,7 +97,6 @@ class Categoria {
     }
   }
 
-  // Métodos estáticos (finders)
   static async findAll() {
     const categorias = await DatabaseService.getCategorias()
     return (categorias || []).map((cat) => Categoria.fromDatabase(cat)).filter(Boolean)
@@ -178,7 +172,6 @@ class Gasto {
     }
   }
 
-  // Guardar (crear o actualizar)
   async save() {
     const validation = this.validate()
     if (!validation.isValid) {
@@ -195,7 +188,6 @@ class Gasto {
     return this
   }
 
-  // Eliminar
   async delete() {
     if (!this.id) {
       throw new Error("No se puede eliminar un gasto sin ID")
@@ -203,12 +195,10 @@ class Gasto {
     await DatabaseService.eliminarGasto(this.id)
   }
 
-  // Obtener categoría del gasto
   async getCategoria() {
     return await Categoria.findById(this.categoriaId)
   }
 
-  // Métodos estáticos (finders)
   static async findAll() {
     const gastos = await DatabaseService.getGastos()
     return (gastos || []).map((gasto) => Gasto.fromDatabase(gasto)).filter(Boolean)
