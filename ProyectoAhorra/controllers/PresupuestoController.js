@@ -1,4 +1,4 @@
-import { Categoria, Gasto, CategoriaConGastos } from "../models/Presupuesto"
+import { Categoria, Gasto, CategoriaConGastos } from "../models/presupuesto"
 
 class PresupuestoController {
   constructor() {

@@ -15,7 +15,7 @@ class DatabaseService {
       console.log("Usando LocalStorage para web")
     } else {
       console.log("Usando SQLite para móvil")
-      this.db = await SQLite.openDatabaseAsync("miapp.db")
+      this.db = await SQLite.openDatabaseAsync("miapp.db", {useNewConnection: true})
       await this.crearTablas()
     }
   }
