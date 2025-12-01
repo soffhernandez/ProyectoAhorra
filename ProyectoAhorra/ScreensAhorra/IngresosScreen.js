@@ -5,6 +5,9 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { Controlador } from "../controllers/UsuarioController";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 // =============================
 //  MODAL PARA FILTRAR CATEGORÍA
