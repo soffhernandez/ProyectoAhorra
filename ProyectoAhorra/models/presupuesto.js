@@ -1,3 +1,8 @@
+import DatabaseService from "../database/DatabaseService"
+
+// ============================================
+// MODEL: CATEGORIA
+// ============================================
 class Categoria {
   constructor(id, nombre, total, iconoNombre = "pricetag", iconoColor = "#4da6ff") {
     this.id = id
@@ -49,8 +54,73 @@ class Categoria {
       iconoColor: this.iconoColor,
     }
   }
+
+  // Guardar (crear o actualizar)
+  async save() {
+    const validation = this.validate()
+    if (!validation.isValid) {
+      throw new Error(validation.errors.join(", "))
+    }
+
+    if (this.id) {
+      await DatabaseService.modificarCategoria(this.id, this.nombre, this.total)
+    } else {
+      const result = await DatabaseService.agregarCategoria(this.nombre, this.total, this.iconoNombre, this.iconoColor)
+      this.id = result?.id || result
+    }
+
+    return this
+  }
+
+  // Eliminar
+  async delete() {
+    if (!this.id) {
+      throw new Error("No se puede eliminar una categoría sin ID")
+    }
+    await DatabaseService.eliminarCategoria(this.id)
+  }
+
+  // Obtener gastos de esta categoría
+  async getGastos() {
+    const todosGastos = await Gasto.findAll()
+    return todosGastos.filter((g) => g.categoriaId === this.id)
+  }
+
+  // Calcular totales
+  async calcularEstadisticas() {
+    const gastos = await this.getGastos()
+    const gastado = gastos.reduce((sum, g) => sum + g.monto, 0)
+    const restante = this.total - gastado
+    const progreso = this.total > 0 ? (gastado / this.total) * 100 : 0
+
+    return {
+      gastado,
+      restante,
+      progreso,
+      gastos,
+    }
+  }
+
+  // Métodos estáticos (finders)
+  static async findAll() {
+    const categorias = await DatabaseService.getCategorias()
+    return (categorias || []).map((cat) => Categoria.fromDatabase(cat)).filter(Boolean)
+  }
+
+  static async findById(id) {
+    const categorias = await Categoria.findAll()
+    return categorias.find((cat) => cat.id === id.toString())
+  }
+
+  static async create(nombre, total, iconoNombre = "pricetag", iconoColor = "#4da6ff") {
+    const categoria = new Categoria(null, nombre, total, iconoNombre, iconoColor)
+    return await categoria.save()
+  }
 }
 
+// ============================================
+// MODEL: GASTO
+// ============================================
 class Gasto {
   constructor(id, categoriaId, nombre, monto, fecha = new Date()) {
     this.id = id
@@ -106,8 +176,66 @@ class Gasto {
       fecha: this.fecha.toISOString(),
     }
   }
+
+  // Guardar (crear o actualizar)
+  async save() {
+    const validation = this.validate()
+    if (!validation.isValid) {
+      throw new Error(validation.errors.join(", "))
+    }
+
+    if (this.id) {
+      await DatabaseService.modificarGasto(this.id, this.categoriaId, this.nombre, this.monto)
+    } else {
+      const result = await DatabaseService.agregarGasto(this.categoriaId, this.nombre, this.monto)
+      this.id = result?.id || result
+    }
+
+    return this
+  }
+
+  // Eliminar
+  async delete() {
+    if (!this.id) {
+      throw new Error("No se puede eliminar un gasto sin ID")
+    }
+    await DatabaseService.eliminarGasto(this.id)
+  }
+
+  // Obtener categoría del gasto
+  async getCategoria() {
+    return await Categoria.findById(this.categoriaId)
+  }
+
+  // Métodos estáticos (finders)
+  static async findAll() {
+    const gastos = await DatabaseService.getGastos()
+    return (gastos || []).map((gasto) => Gasto.fromDatabase(gasto)).filter(Boolean)
+  }
+
+  static async findById(id) {
+    const gastos = await Gasto.findAll()
+    return gastos.find((g) => g.id === id.toString())
+  }
+
+  static async findByCategoria(categoriaId) {
+    const gastos = await Gasto.findAll()
+    return gastos.filter((g) => g.categoriaId === categoriaId.toString())
+  }
+
+  static async create(categoriaId, nombre, monto) {
+    const gasto = new Gasto(null, categoriaId, nombre, monto)
+    return await gasto.save()
+  }
+
+  static async deleteAll() {
+    await DatabaseService.eliminarTodosGastos()
+  }
 }
 
+// ============================================
+// MODEL: CATEGORIA CON GASTOS (View Model)
+// ============================================
 class CategoriaConGastos {
   constructor(categoria, gastos = []) {
     this.id = categoria.id
@@ -134,6 +262,14 @@ class CategoriaConGastos {
     return this.progreso > 90
   }
 
+  get excedido() {
+    return this.progreso > 100
+  }
+
+  get montoExcedido() {
+    return this.excedido ? this.gastado - this.total : 0
+  }
+
   get estadoProgreso() {
     if (this.progreso > 95) return { color: "#ff4d4d", estado: "crítico" }
     if (this.progreso > 75) return { color: "#faad14", estado: "advertencia" }
@@ -152,8 +288,20 @@ class CategoriaConGastos {
       iconoColor: this.iconoColor,
       gastos: this.gastos.map((g) => g.toJSON()),
       estaEnAlerta: this.estaEnAlerta,
+      excedido: this.excedido,
+      montoExcedido: this.montoExcedido,
       estadoProgreso: this.estadoProgreso,
     }
+  }
+
+  static async findAll() {
+    const categorias = await Categoria.findAll()
+    const gastos = await Gasto.findAll()
+
+    return categorias.map((cat) => {
+      const gastosCategoria = gastos.filter((g) => g.categoriaId === cat.id)
+      return new CategoriaConGastos(cat, gastosCategoria)
+    })
   }
 }
 
