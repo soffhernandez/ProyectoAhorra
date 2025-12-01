@@ -1,4 +1,4 @@
-import DatabaseService from "../database/DatabaseServicePre"
+import DatabaseService from "../database/DatabaseService"
 
 // ============================================
 // MODEL: CATEGORIA
