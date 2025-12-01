@@ -9,6 +9,7 @@ class DatabaseService {
     this.categoriasKey = "categorias"
     this.gastosKey = "gastos"
     this.isWebPlatform = Platform.OS === "web"
+    console.log(`[v0] DatabaseService: Plataforma detectada: ${Platform.OS}`)
   }
 
   isWeb() {
@@ -17,16 +18,33 @@ class DatabaseService {
 
   async initialize() {
     if (this.isWeb()) {
-      console.log("Usando LocalStorage para web")
+      console.log("[v0] DatabaseService: Usando LocalStorage para web")
+      if (!localStorage.getItem(this.categoriasKey)) {
+        localStorage.setItem(this.categoriasKey, "[]")
+      }
+      if (!localStorage.getItem(this.gastosKey)) {
+        localStorage.setItem(this.gastosKey, "[]")
+      }
     } else {
-      console.log("Usando SQLite para móvil")
-      this.db = await SQLite.openDatabaseAsync("miapp.db")
-      await this.crearTablas()
+      console.log("[v0] DatabaseService: Inicializando SQLite para móvil...")
+      try {
+        this.db = await SQLite.openDatabaseAsync("miapp.db")
+        console.log("[v0] DatabaseService: SQLite abierto correctamente")
+        await this.crearTablas()
+        console.log("[v0] DatabaseService: Tablas creadas correctamente")
+      } catch (error) {
+        console.error("[v0] DatabaseService: Error al inicializar SQLite:", error)
+        throw error
+      }
     }
   }
 
   async crearTablas() {
     if (this.isWeb()) return
+
+    if (!this.db) {
+      throw new Error("La base de datos no está inicializada")
+    }
 
     await this.db.execAsync(`
             CREATE TABLE IF NOT EXISTS usuarios (
@@ -69,6 +87,9 @@ class DatabaseService {
       const data = localStorage.getItem(this.storageKey)
       return data ? JSON.parse(data) : []
     } else {
+      if (!this.db) {
+        throw new Error("La base de datos no está inicializada. Llama a initialize() primero.")
+      }
       return await this.db.getAllAsync("SELECT * FROM usuarios ORDER BY id DESC")
     }
   }
