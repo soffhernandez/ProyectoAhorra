@@ -81,6 +81,12 @@ class DatabaseService {
         `)
   }
 
+  checkDbInitialized() {
+    if (!this.isWeb() && !this.db) {
+      throw new Error("La base de datos no está inicializada. Llama a initialize() primero.")
+    }
+  }
+
   // ============ USUARIOS ============
   async getAll() {
     if (this.isWeb()) {
@@ -148,6 +154,7 @@ class DatabaseService {
       const data = localStorage.getItem(this.categoriasKey)
       return data ? JSON.parse(data) : []
     } else {
+      this.checkDbInitialized()
       return await this.db.getAllAsync("SELECT * FROM categorias ORDER BY id DESC")
     }
   }
@@ -169,6 +176,7 @@ class DatabaseService {
       localStorage.setItem(this.categoriasKey, JSON.stringify(categorias))
       return nueva
     } else {
+      this.checkDbInitialized()
       const result = await this.db.runAsync(
         "INSERT INTO categorias (nombre, total, icono_nombre, icono_color) VALUES (?, ?, ?, ?)",
         [nombre, Number.parseFloat(total), iconoNombre, iconoColor],
@@ -198,6 +206,7 @@ class DatabaseService {
       }
       return null
     } else {
+      this.checkDbInitialized()
       await this.db.runAsync("UPDATE categorias SET nombre = ?, total = ? WHERE id = ?", [
         nombre,
         Number.parseFloat(total),
@@ -224,6 +233,7 @@ class DatabaseService {
       localStorage.setItem(this.gastosKey, JSON.stringify(gastosFiltrados))
       return true
     } else {
+      this.checkDbInitialized()
       await this.db.runAsync("DELETE FROM categorias WHERE id = ?", [id])
       return true
     }
@@ -235,6 +245,7 @@ class DatabaseService {
       const data = localStorage.getItem(this.gastosKey)
       return data ? JSON.parse(data) : []
     } else {
+      this.checkDbInitialized()
       return await this.db.getAllAsync("SELECT * FROM gastos ORDER BY fecha DESC")
     }
   }
@@ -254,6 +265,7 @@ class DatabaseService {
       localStorage.setItem(this.gastosKey, JSON.stringify(gastos))
       return nuevo
     } else {
+      this.checkDbInitialized()
       const result = await this.db.runAsync("INSERT INTO gastos (categoria_id, nombre, monto) VALUES (?, ?, ?)", [
         categoriaId,
         nombre,
@@ -284,6 +296,7 @@ class DatabaseService {
       }
       return null
     } else {
+      this.checkDbInitialized()
       await this.db.runAsync("UPDATE gastos SET categoria_id = ?, nombre = ?, monto = ? WHERE id = ?", [
         categoriaId,
         nombre,
@@ -302,6 +315,7 @@ class DatabaseService {
       localStorage.setItem(this.gastosKey, JSON.stringify(filtrado))
       return true
     } else {
+      this.checkDbInitialized()
       await this.db.runAsync("DELETE FROM gastos WHERE id = ?", [id])
       return true
     }
@@ -312,6 +326,7 @@ class DatabaseService {
       localStorage.setItem(this.gastosKey, "[]")
       return true
     } else {
+      this.checkDbInitialized()
       await this.db.runAsync("DELETE FROM gastos")
       return true
     }
