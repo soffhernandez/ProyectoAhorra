@@ -21,7 +21,7 @@ class PresupuestoController {
       try {
         callback()
       } catch (error) {
-        console.error("[v0] Error en listener:", error)
+        console.error("[v1] Error en listener:", error)
       }
     })
   }
@@ -31,32 +31,32 @@ class PresupuestoController {
   // ============================================
   async fetchCategorias() {
     try {
-      console.log("[v0] Controller: Fetching categorías...")
+      console.log("[v1] Controller: Fetching categorías...")
       const categorias = await Categoria.findAll()
-      console.log("[v0] Controller: Categorías obtenidas:", categorias?.length || 0)
+      console.log("[v1] Controller: Categorías obtenidas:", categorias?.length || 0)
       return categorias
     } catch (error) {
-      console.error("[v0] Controller: Error al obtener categorías:", error)
+      console.error("[v1] Controller: Error al obtener categorías:", error)
       return []
     }
   }
 
   async agregarCategoria(nombre, total, iconoNombre = "pricetag", iconoColor = "#4da6ff") {
     try {
-      console.log("[v0] Controller: Agregando categoría:", nombre, total)
+      console.log("[v1] Controller: Agregando categoría:", nombre, total)
       const categoria = await Categoria.create(nombre, total, iconoNombre, iconoColor)
       this.notifyListeners()
-      console.log("[v0] Controller: Categoría agregada exitosamente")
+      console.log("[v1] Controller: Categoría agregada exitosamente")
       return categoria
     } catch (error) {
-      console.error("[v0] Controller: Error al agregar categoría:", error)
+      console.error("[v1] Controller: Error al agregar categoría:", error)
       throw error
     }
   }
 
   async modificarCategoria(id, nombre, total) {
     try {
-      console.log("[v0] Controller: Modificando categoría:", id, nombre, total)
+      console.log("[v1] Controller: Modificando categoría:", id, nombre, total)
       const categoria = await Categoria.findById(id)
 
       if (!categoria) {
@@ -68,17 +68,17 @@ class PresupuestoController {
       await categoria.save()
 
       this.notifyListeners()
-      console.log("[v0] Controller: Categoría modificada exitosamente")
+      console.log("[v1] Controller: Categoría modificada exitosamente")
       return categoria
     } catch (error) {
-      console.error("[v0] Controller: Error al modificar categoría:", error)
+      console.error("[v1] Controller: Error al modificar categoría:", error)
       throw error
     }
   }
 
   async eliminarCategoria(id) {
     try {
-      console.log("[v0] Controller: Eliminando categoría:", id)
+      console.log("[v1] Controller: Eliminando categoría:", id)
       const categoria = await Categoria.findById(id)
 
       if (!categoria) {
@@ -87,9 +87,9 @@ class PresupuestoController {
 
       await categoria.delete()
       this.notifyListeners()
-      console.log("[v0] Controller: Categoría eliminada exitosamente")
+      console.log("[v1] Controller: Categoría eliminada exitosamente")
     } catch (error) {
-      console.error("[v0] Controller: Error al eliminar categoría:", error)
+      console.error("[v1] Controller: Error al eliminar categoría:", error)
       throw error
     }
   }
@@ -99,32 +99,32 @@ class PresupuestoController {
   // ============================================
   async fetchGastos() {
     try {
-      console.log("[v0] Controller: Fetching gastos...")
+      console.log("[v1] Controller: Fetching gastos...")
       const gastos = await Gasto.findAll()
-      console.log("[v0] Controller: Gastos obtenidos:", gastos?.length || 0)
+      console.log("[v1] Controller: Gastos obtenidos:", gastos?.length || 0)
       return gastos
     } catch (error) {
-      console.error("[v0] Controller: Error al obtener gastos:", error)
+      console.error("[v1] Controller: Error al obtener gastos:", error)
       return []
     }
   }
 
   async agregarGasto(categoriaId, nombre, monto) {
     try {
-      console.log("[v0] Controller: Agregando gasto:", { categoriaId, nombre, monto })
+      console.log("[v1] Controller: Agregando gasto:", { categoriaId, nombre, monto })
       const gasto = await Gasto.create(categoriaId, nombre, monto)
       this.notifyListeners()
-      console.log("[v0] Controller: Gasto agregado exitosamente")
+      console.log("[v1] Controller: Gasto agregado exitosamente")
       return gasto
     } catch (error) {
-      console.error("[v0] Controller: Error al agregar gasto:", error)
+      console.error("[v1] Controller: Error al agregar gasto:", error)
       throw error
     }
   }
 
   async modificarGasto(id, categoriaId, nombre, monto) {
     try {
-      console.log("[v0] Controller: Modificando gasto:", id, categoriaId, nombre, monto)
+      console.log("[v1] Controller: Modificando gasto:", id, categoriaId, nombre, monto)
       const gasto = await Gasto.findById(id)
 
       if (!gasto) {
@@ -137,17 +137,17 @@ class PresupuestoController {
       await gasto.save()
 
       this.notifyListeners()
-      console.log("[v0] Controller: Gasto modificado exitosamente")
+      console.log("[v1] Controller: Gasto modificado exitosamente")
       return gasto
     } catch (error) {
-      console.error("[v0] Controller: Error al modificar gasto:", error)
+      console.error("[v1] Controller: Error al modificar gasto:", error)
       throw error
     }
   }
 
   async eliminarGasto(id) {
     try {
-      console.log("[v0] Controller: Eliminando gasto:", id)
+      console.log("[v1] Controller: Eliminando gasto:", id)
       const gasto = await Gasto.findById(id)
 
       if (!gasto) {
@@ -156,9 +156,9 @@ class PresupuestoController {
 
       await gasto.delete()
       this.notifyListeners()
-      console.log("[v0] Controller: Gasto eliminado exitosamente")
+      console.log("[v1] Controller: Gasto eliminado exitosamente")
     } catch (error) {
-      console.error("[v0] Controller: Error al eliminar gasto:", error)
+      console.error("[v1] Controller: Error al eliminar gasto:", error)
       throw error
     }
   }
@@ -168,12 +168,12 @@ class PresupuestoController {
   // ============================================
   async fetchCategoriasConGastos() {
     try {
-      console.log("[v0] Controller: Fetching categorías con gastos...")
+      console.log("[v1] Controller: Fetching categorías con gastos...")
       const categoriasConGastos = await CategoriaConGastos.findAll()
-      console.log("[v0] Controller: Categorías con gastos obtenidas:", categoriasConGastos?.length || 0)
+      console.log("[v1] Controller: Categorías con gastos obtenidas:", categoriasConGastos?.length || 0)
       return categoriasConGastos
     } catch (error) {
-      console.error("[v0] Controller: Error al obtener categorías con gastos:", error)
+      console.error("[v1] Controller: Error al obtener categorías con gastos:", error)
       return []
     }
   }
@@ -183,12 +183,12 @@ class PresupuestoController {
   // ============================================
   async reiniciarMes() {
     try {
-      console.log("[v0] Controller: Reiniciando mes...")
+      console.log("[v1] Controller: Reiniciando mes...")
       await Gasto.deleteAll()
       this.notifyListeners()
-      console.log("[v0] Controller: Mes reiniciado exitosamente")
+      console.log("[v1] Controller: Mes reiniciado exitosamente")
     } catch (error) {
-      console.error("[v0] Controller: Error al reiniciar mes:", error)
+      console.error("[v1] Controller: Error al reiniciar mes:", error)
       throw error
     }
   }
@@ -210,7 +210,7 @@ class PresupuestoController {
         categoriasConGastos,
       }
     } catch (error) {
-      console.error("[v0] Controller: Error al obtener resumen general:", error)
+      console.error("[v1] Controller: Error al obtener resumen general:", error)
       throw error
     }
   }
