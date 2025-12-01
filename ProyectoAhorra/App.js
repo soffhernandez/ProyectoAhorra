@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import DatabaseService from './database/DatabaseService';
 
 // Pantallas
 import InicioScreen from './ScreensAhorra/PantallaInicio';
@@ -46,6 +48,11 @@ function MyTabs() {
 }
 
 export default function App() {
+  useEffect(() => {
+    // Inicializar la base de datos al arrancar la app
+    DatabaseService.initialize();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
