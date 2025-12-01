@@ -218,7 +218,7 @@ export default function IngresosScreen({navigation}) {
       <LinearGradient colors={["#e9f4ff", "#e9f4ff"]} style={styles.container}>
           {/* Header */}
                 <View style={styles.header}>
-                  <Text style={styles.greeting}>Transacciones</Text>
+                  <Text style={styles.greeting}>Ingresos y Transacciones</Text>
                   <View style={styles.headerIcons}>
                     <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
                    <Ionicons name="person-outline" size={28} color="#fff" />

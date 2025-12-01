@@ -32,7 +32,11 @@ class DatabaseService {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     fecha TEXT NOT NULL,
                     limite REAL NOT NULL,
-                    cantidad REAL NOT NULL
+                    cantidad REAL NOT NULL,
+                    categoria TEXT NOT NULL,
+                    desc TEXT NOT NULL,
+                    ingresos REAL DEFAULT 0,
+                    gastos REAL DEFAULT 0
                 );
             `);
         }

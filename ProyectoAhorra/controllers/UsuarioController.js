@@ -15,7 +15,7 @@ export class Controlador {
     // CRUD Usuario
     async obtenerUsuarios() {
         try {
-            const data = await DatabaseService.getAll('usuarios'); 
+            const data = await DatabaseService.getAll('usuarios');
             return data.map(u => new Usuario(u.id, u.nombre, u.fecha_creacion));
         } catch (error) {
             console.error('Error al obtener usuarios:', error);
@@ -142,18 +142,26 @@ export class Controlador {
     async obtenerTransacciones() {
         try {
             const data = await DatabaseService.getAll('transacciones');
-            return data.map(t => new Transaccion(t.id, t.fecha, t.limite, t.cantidad));
+            return data.map(t => new Transaccion(t.id, t.fecha, t.limite, t.cantidad, t.categoria, t.desc, t.ingresos, t.gastos));
         } catch (error) {
             console.error('Error al obtener transacciones:', error);
             throw new Error('No se pudieron cargar las transacciones');
         }
     }
 
-    async crearTransaccion(fecha, limite, cantidad) {
+    async crearTransaccion(fecha, limite, cantidad, categoria, desc, ingresos = 0, gastos = 0) {
         try {
-            Transaccion.validar(fecha, limite, cantidad);
+            Transaccion.validar(fecha, limite, cantidad, categoria, desc, ingresos, gastos);
 
-            const nuevaTransaccion = await DatabaseService.add('transacciones', { fecha, limite, cantidad });
+            const nuevaTransaccion = await DatabaseService.add('transacciones', {
+                fecha,
+                limite,
+                cantidad,
+                categoria,
+                desc,
+                ingresos,
+                gastos
+            });
 
             this.notifyListeners();
 
@@ -161,7 +169,11 @@ export class Controlador {
                 nuevaTransaccion.id,
                 nuevaTransaccion.fecha,
                 nuevaTransaccion.limite,
-                nuevaTransaccion.cantidad
+                nuevaTransaccion.cantidad,
+                nuevaTransaccion.categoria,
+                nuevaTransaccion.desc,
+                nuevaTransaccion.ingresos,
+                nuevaTransaccion.gastos
             );
         } catch (error) {
             console.error('Error al crear transacción:', error);
@@ -169,11 +181,19 @@ export class Controlador {
         }
     }
 
-    async actualizarTransaccion(id, fecha, limite, cantidad) {
+    async actualizarTransaccion(id, fecha, limite, cantidad, categoria, desc, ingresos = 0, gastos = 0) {
         try {
-            Transaccion.validar(fecha, limite, cantidad);
+            Transaccion.validar(fecha, limite, cantidad, categoria, desc, ingresos, gastos);
 
-            const actualizado = await DatabaseService.update('transacciones', id, { fecha, limite, cantidad });
+            const actualizado = await DatabaseService.update('transacciones', id, {
+                fecha,
+                limite,
+                cantidad,
+                categoria,
+                desc,
+                ingresos,
+                gastos
+            });
 
             this.notifyListeners();
 
@@ -181,7 +201,11 @@ export class Controlador {
                 actualizado.id,
                 actualizado.fecha,
                 actualizado.limite,
-                actualizado.cantidad
+                actualizado.cantidad,
+                actualizado.categoria,
+                actualizado.desc,
+                actualizado.ingresos,
+                actualizado.gastos
             );
         } catch (error) {
             console.error('Error al actualizar transacción:', error);
@@ -215,4 +239,3 @@ export class Controlador {
         this.listeners.forEach(callback => callback());
     }
 }
-
