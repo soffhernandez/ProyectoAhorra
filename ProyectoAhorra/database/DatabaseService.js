@@ -20,59 +20,8 @@ class DatabaseService {
     }
   }
 
-    async initialize() {
-        if (Platform.OS === 'web') {
-            console.log('Usando LocalStorage para web');
-        } else {
-            console.log('Usando SQLite para móvil');
-            this.db = await SQLite.openDatabaseAsync('miapp.db');
-            await this.db.execAsync(`
-                CREATE TABLE IF NOT EXISTS usuarios (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre TEXT NOT NULL,
-                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
-                );
-            `);
-            await this.db.execAsync(`
-                CREATE TABLE IF NOT EXISTS presupuestos (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    fecha TEXT NOT NULL,
-                    limite REAL NOT NULL,
-                    cantidad REAL NOT NULL
-                );
-            `);
-            await this.db.execAsync(`
-                CREATE TABLE IF NOT EXISTS transacciones (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    fecha TEXT NOT NULL,
-                    limite REAL NOT NULL,
-                    cantidad REAL NOT NULL,
-                    categoria TEXT NOT NULL,
-                    desc TEXT NOT NULL,
-                    ingresos REAL DEFAULT 0,
-                    gastos REAL DEFAULT 0
-                );
-            `);
-            await this.db.execAsync(`
-                CREATE TABLE IF NOT EXISTS categorias (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre TEXT NOT NULL,
-                    total REAL NOT NULL,
-                    iconoNombre TEXT DEFAULT 'pricetag',
-                    iconoColor TEXT DEFAULT '#4da6ff'
-                );
-            `);
-            await this.db.execAsync(`
-                CREATE TABLE IF NOT EXISTS gastos (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    categoriaId INTEGER NOT NULL,
-                    nombre TEXT NOT NULL,
-                    monto REAL NOT NULL,
-                    FOREIGN KEY (categoriaId) REFERENCES categorias(id) ON DELETE CASCADE
-                );
-            `);
-        }
-    }
+  async crearTablas() {
+    if (Platform.OS === "web") return
 
     await this.db.execAsync(`
             CREATE TABLE IF NOT EXISTS usuarios (
@@ -117,7 +66,6 @@ class DatabaseService {
     } else {
       return await this.db.getAllAsync("SELECT * FROM usuarios ORDER BY id DESC")
     }
-<<<<<<< Updated upstream
   }
 
   async add(nombre) {
@@ -394,10 +342,6 @@ class DatabaseService {
       return true
     }
   }
-=======
-
-    
->>>>>>> Stashed changes
 }
 
 export default new DatabaseService()

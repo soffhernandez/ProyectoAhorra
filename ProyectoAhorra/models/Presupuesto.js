@@ -1,3 +1,4 @@
+
 import DatabaseService from "../database/DatabaseService"
 
 // ============================================
@@ -55,42 +56,38 @@ class Categoria {
     }
   }
 
+  // Guardar (crear o actualizar)
   async save() {
     const validation = this.validate()
     if (!validation.isValid) {
       throw new Error(validation.errors.join(", "))
     }
 
-    const categoriaData = {
-      nombre: this.nombre,
-      total: this.total,
-      iconoNombre: this.iconoNombre,
-      iconoColor: this.iconoColor
-    }
-
     if (this.id) {
-      // Update existing
-      await DatabaseService.update('categorias', this.id, categoriaData)
+      await DatabaseService.modificarCategoria(this.id, this.nombre, this.total)
     } else {
-      // Create new
-      const result = await DatabaseService.add('categorias', categoriaData)
-      this.id = result.id
+      const result = await DatabaseService.agregarCategoria(this.nombre, this.total, this.iconoNombre, this.iconoColor)
+      this.id = result?.id || result
     }
 
     return this
   }
 
+  // Eliminar
   async delete() {
     if (!this.id) {
       throw new Error("No se puede eliminar una categoría sin ID")
     }
-    await DatabaseService.remove('categorias', this.id)
+    await DatabaseService.eliminarCategoria(this.id)
   }
 
+  // Obtener gastos de esta categoría
   async getGastos() {
-    return await Gasto.findByCategoria(this.id)
+    const todosGastos = await Gasto.findAll()
+    return todosGastos.filter((g) => g.categoriaId === this.id)
   }
 
+  // Calcular totales
   async calcularEstadisticas() {
     const gastos = await this.getGastos()
     const gastado = gastos.reduce((sum, g) => sum + g.monto, 0)
@@ -105,24 +102,15 @@ class Categoria {
     }
   }
 
+  // Métodos estáticos (finders)
   static async findAll() {
-    try {
-      const categorias = await DatabaseService.getAll('categorias')
-      return (categorias || []).map((cat) => Categoria.fromDatabase(cat)).filter(Boolean)
-    } catch (error) {
-      console.error("Error en Categoria.findAll:", error)
-      return []
-    }
+    const categorias = await DatabaseService.getCategorias()
+    return (categorias || []).map((cat) => Categoria.fromDatabase(cat)).filter(Boolean)
   }
 
   static async findById(id) {
-    try {
-      const categorias = await this.findAll()
-      return categorias.find((cat) => cat.id.toString() === id.toString())
-    } catch (error) {
-      console.error("Error en Categoria.findById:", error)
-      return null
-    }
+    const categorias = await Categoria.findAll()
+    return categorias.find((cat) => cat.id === id.toString())
   }
 
   static async create(nombre, total, iconoNombre = "pricetag", iconoColor = "#4da6ff") {
@@ -190,70 +178,50 @@ class Gasto {
     }
   }
 
+  // Guardar (crear o actualizar)
   async save() {
     const validation = this.validate()
     if (!validation.isValid) {
       throw new Error(validation.errors.join(", "))
     }
 
-    const gastoData = {
-      categoriaId: this.categoriaId,
-      nombre: this.nombre,
-      monto: this.monto,
-      fecha: this.fecha.toISOString()
-    }
-
     if (this.id) {
-      // Update existing
-      await DatabaseService.update('gastos', this.id, gastoData)
+      await DatabaseService.modificarGasto(this.id, this.categoriaId, this.nombre, this.monto)
     } else {
-      // Create new
-      const result = await DatabaseService.add('gastos', gastoData)
-      this.id = result.id
+      const result = await DatabaseService.agregarGasto(this.categoriaId, this.nombre, this.monto)
+      this.id = result?.id || result
     }
 
     return this
   }
 
+  // Eliminar
   async delete() {
     if (!this.id) {
       throw new Error("No se puede eliminar un gasto sin ID")
     }
-    await DatabaseService.remove('gastos', this.id)
+    await DatabaseService.eliminarGasto(this.id)
   }
 
+  // Obtener categoría del gasto
   async getCategoria() {
     return await Categoria.findById(this.categoriaId)
   }
 
+  // Métodos estáticos (finders)
   static async findAll() {
-    try {
-      const gastos = await DatabaseService.getAll('gastos')
-      return (gastos || []).map((gasto) => Gasto.fromDatabase(gasto)).filter(Boolean)
-    } catch (error) {
-      console.error("Error en Gasto.findAll:", error)
-      return []
-    }
+    const gastos = await DatabaseService.getGastos()
+    return (gastos || []).map((gasto) => Gasto.fromDatabase(gasto)).filter(Boolean)
   }
 
   static async findById(id) {
-    try {
-      const gastos = await this.findAll()
-      return gastos.find((g) => g.id.toString() === id.toString())
-    } catch (error) {
-      console.error("Error en Gasto.findById:", error)
-      return null
-    }
+    const gastos = await Gasto.findAll()
+    return gastos.find((g) => g.id === id.toString())
   }
 
   static async findByCategoria(categoriaId) {
-    try {
-      const gastos = await this.findAll()
-      return gastos.filter((g) => g.categoriaId.toString() === categoriaId.toString())
-    } catch (error) {
-      console.error("Error en Gasto.findByCategoria:", error)
-      return []
-    }
+    const gastos = await Gasto.findAll()
+    return gastos.filter((g) => g.categoriaId === categoriaId.toString())
   }
 
   static async create(categoriaId, nombre, monto) {
@@ -262,15 +230,7 @@ class Gasto {
   }
 
   static async deleteAll() {
-    try {
-      const gastos = await this.findAll()
-      for (const gasto of gastos) {
-        await gasto.delete()
-      }
-    } catch (error) {
-      console.error("Error en Gasto.deleteAll:", error)
-      throw error
-    }
+    await DatabaseService.eliminarTodosGastos()
   }
 }
 
@@ -336,18 +296,13 @@ class CategoriaConGastos {
   }
 
   static async findAll() {
-    try {
-      const categorias = await Categoria.findAll()
-      const gastos = await Gasto.findAll()
+    const categorias = await Categoria.findAll()
+    const gastos = await Gasto.findAll()
 
-      return categorias.map((cat) => {
-        const gastosCategoria = gastos.filter((g) => g.categoriaId?.toString() === cat.id?.toString())
-        return new CategoriaConGastos(cat, gastosCategoria)
-      })
-    } catch (error) {
-      console.error("Error en CategoriaConGastos.findAll:", error)
-      return []
-    }
+    return categorias.map((cat) => {
+      const gastosCategoria = gastos.filter((g) => g.categoriaId === cat.id)
+      return new CategoriaConGastos(cat, gastosCategoria)
+    })
   }
 }
 
