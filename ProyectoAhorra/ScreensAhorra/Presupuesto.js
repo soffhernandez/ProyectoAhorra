@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Modal, TextInput 
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
 import DateTimePicker from "@react-native-community/datetimepicker"
+import { useNavigation } from '@react-navigation/native'
+
 
 // =============================
 //  MODAL PARA FILTRAR CATEGORÍA
@@ -231,6 +233,8 @@ const ConfirmModal = ({ visible, titulo, mensaje, advertencia, icono, onClose, o
 )
 
 export default function PresupuestoMensualScreen() {
+  const navigation = useNavigation()
+
   const [modalTipo, setModalTipo] = useState(null) // 'addCategoria', 'editCategoria', 'addGasto', 'editGasto'
   const [modalConfirm, setModalConfirm] = useState(null) // 'deleteCategoria', 'deleteGasto', 'resetMes'
   const [itemSeleccionado, setItemSeleccionado] = useState(null)
@@ -388,7 +392,10 @@ export default function PresupuestoMensualScreen() {
       <View style={styles.header}>
         <Text style={styles.greeting}>Presupuesto mensual</Text>
           <View style={styles.headerIcons}>
+            <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
             <Ionicons name="person-outline" size={28} color="#fff" />
+            </TouchableOpacity>
+
           </View>
       </View>
 
