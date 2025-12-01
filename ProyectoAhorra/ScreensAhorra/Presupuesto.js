@@ -170,14 +170,6 @@ const CategoriaCard = ({
 
 // Modal unificado para formularios (Agregar/Editar)
 const FormModal = ({ visible, titulo, onClose, onSubmit, fields }) => {
-  console.log("[v0] FormModal abierto:", titulo, "Fields:", fields.length)
-  console.log(
-    "[v0] Campos:",
-    JSON.stringify(
-      fields.map((f) => ({ label: f.label, type: f.type, hasOptions: !!f.options, optionsCount: f.options?.length })),
-    ),
-  )
-
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
@@ -187,14 +179,6 @@ const FormModal = ({ visible, titulo, onClose, onSubmit, fields }) => {
 
             {fields.map((field, index) => {
               const isPicker = field.type === "picker"
-              console.log(
-                `[v0] Renderizando field ${index}:`,
-                field.label,
-                "isPicker:",
-                isPicker,
-                "options:",
-                field.options?.length,
-              )
 
               return (
                 <View key={index}>
@@ -210,7 +194,6 @@ const FormModal = ({ visible, titulo, onClose, onSubmit, fields }) => {
                               field.value === option.id && styles.modalPickerOptionSelected,
                             ]}
                             onPress={() => {
-                              console.log("[v0] Categoría seleccionada:", option.nombre, "ID:", option.id)
                               field.onChange(option.id)
                             }}
                           >
@@ -249,7 +232,6 @@ const FormModal = ({ visible, titulo, onClose, onSubmit, fields }) => {
               <TouchableOpacity
                 style={styles.modalBotonAceptar}
                 onPress={() => {
-                  console.log("[v0] Botón presionado, ejecutando onSubmit")
                   onSubmit()
                 }}
               >
@@ -386,6 +368,7 @@ export default function PresupuestoMensualScreen() {
         categoriaId: (gasto.categoriaId || gasto.categoria_id).toString(),
         nombre: gasto.nombre,
         monto: Number.parseFloat(gasto.monto),
+        fecha: gasto.fecha, // Assuming fecha is available in the gasto object
       }))
 
       console.log("[v0] Actualizando state con nuevos datos...")
@@ -431,21 +414,50 @@ export default function PresupuestoMensualScreen() {
 
   // Handlers de Categoría
   const handleAgregarCategoria = async () => {
-    if (nombreCategoria && totalCategoria) {
-      try {
-        await PresupuestoController.agregarCategoria(
-          nombreCategoria,
-          Number.parseFloat(totalCategoria),
-          "pricetag",
-          "#4da6ff",
-        )
-        cerrarModal()
-        Alert.alert("Éxito", "Categoría agregada correctamente")
-      } catch (error) {
-        Alert.alert("Error", error.message)
-      }
-    } else {
-      Alert.alert("Error", "Por favor completa todos los campos")
+    // Validar nombre
+    if (!nombreCategoria || !nombreCategoria.trim()) {
+      Alert.alert("Error", "Por favor ingresa el nombre de la categoría")
+      return
+    }
+
+    if (nombreCategoria.trim().length < 3) {
+      Alert.alert("Error", "El nombre debe tener al menos 3 caracteres")
+      return
+    }
+
+    if (nombreCategoria.trim().length > 30) {
+      Alert.alert("Error", "El nombre no puede exceder 30 caracteres")
+      return
+    }
+
+    // Validar presupuesto
+    if (!totalCategoria || totalCategoria.trim() === "") {
+      Alert.alert("Error", "Por favor ingresa el presupuesto")
+      return
+    }
+
+    const presupuesto = Number.parseFloat(totalCategoria)
+    if (isNaN(presupuesto)) {
+      Alert.alert("Error", "El presupuesto debe ser un número válido")
+      return
+    }
+
+    if (presupuesto <= 0) {
+      Alert.alert("Error", "El presupuesto debe ser mayor a 0")
+      return
+    }
+
+    if (presupuesto > 1000000000) {
+      Alert.alert("Error", "El presupuesto es demasiado alto")
+      return
+    }
+
+    try {
+      await PresupuestoController.agregarCategoria(nombreCategoria.trim(), presupuesto, "pricetag", "#4da6ff")
+      cerrarModal()
+      Alert.alert("Éxito", "Categoría agregada correctamente")
+    } catch (error) {
+      Alert.alert("Error", error.message)
     }
   }
 
@@ -457,20 +469,50 @@ export default function PresupuestoMensualScreen() {
   }
 
   const handleGuardarEdicionCategoria = async () => {
-    if (nombreCategoria && totalCategoria) {
-      try {
-        await PresupuestoController.modificarCategoria(
-          itemSeleccionado.id,
-          nombreCategoria,
-          Number.parseFloat(totalCategoria),
-        )
-        cerrarModal()
-        Alert.alert("Éxito", "Categoría actualizada correctamente")
-      } catch (error) {
-        Alert.alert("Error", error.message)
-      }
-    } else {
-      Alert.alert("Error", "Por favor completa todos los campos")
+    // Validar nombre
+    if (!nombreCategoria || !nombreCategoria.trim()) {
+      Alert.alert("Error", "Por favor ingresa el nombre de la categoría")
+      return
+    }
+
+    if (nombreCategoria.trim().length < 3) {
+      Alert.alert("Error", "El nombre debe tener al menos 3 caracteres")
+      return
+    }
+
+    if (nombreCategoria.trim().length > 30) {
+      Alert.alert("Error", "El nombre no puede exceder 30 caracteres")
+      return
+    }
+
+    // Validar presupuesto
+    if (!totalCategoria || totalCategoria.trim() === "") {
+      Alert.alert("Error", "Por favor ingresa el presupuesto")
+      return
+    }
+
+    const presupuesto = Number.parseFloat(totalCategoria)
+    if (isNaN(presupuesto)) {
+      Alert.alert("Error", "El presupuesto debe ser un número válido")
+      return
+    }
+
+    if (presupuesto <= 0) {
+      Alert.alert("Error", "El presupuesto debe ser mayor a 0")
+      return
+    }
+
+    if (presupuesto > 1000000000) {
+      Alert.alert("Error", "El presupuesto es demasiado alto")
+      return
+    }
+
+    try {
+      await PresupuestoController.modificarCategoria(itemSeleccionado.id, nombreCategoria.trim(), presupuesto)
+      cerrarModal()
+      Alert.alert("Éxito", "Categoría actualizada correctamente")
+    } catch (error) {
+      Alert.alert("Error", error.message)
     }
   }
 
@@ -492,42 +534,56 @@ export default function PresupuestoMensualScreen() {
 
   // Handlers de Gasto
   const handleAgregarGasto = async () => {
-    console.log("[v0] ===== AGREGAR GASTO =====")
-    console.log("[v0] Nombre:", nombreGasto)
-    console.log("[v0] Monto:", montoGasto)
-    console.log("[v0] Categoría ID:", categoriaGasto)
-
+    // Validar nombre del gasto
     if (!nombreGasto || !nombreGasto.trim()) {
       Alert.alert("Error", "Por favor ingresa el nombre del gasto")
       return
     }
 
-    if (!montoGasto || isNaN(Number.parseFloat(montoGasto)) || Number.parseFloat(montoGasto) <= 0) {
-      Alert.alert("Error", "Por favor ingresa un monto válido mayor a 0")
+    if (nombreGasto.trim().length < 3) {
+      Alert.alert("Error", "El nombre debe tener al menos 3 caracteres")
       return
     }
 
+    if (nombreGasto.trim().length > 50) {
+      Alert.alert("Error", "El nombre no puede exceder 50 caracteres")
+      return
+    }
+
+    // Validar monto
+    if (!montoGasto || montoGasto.trim() === "") {
+      Alert.alert("Error", "Por favor ingresa el monto")
+      return
+    }
+
+    const monto = Number.parseFloat(montoGasto)
+    if (isNaN(monto)) {
+      Alert.alert("Error", "El monto debe ser un número válido")
+      return
+    }
+
+    if (monto <= 0) {
+      Alert.alert("Error", "El monto debe ser mayor a 0")
+      return
+    }
+
+    if (monto > 1000000000) {
+      Alert.alert("Error", "El monto es demasiado alto")
+      return
+    }
+
+    // Validar categoría
     if (!categoriaGasto) {
       Alert.alert("Error", "Por favor selecciona una categoría")
       return
     }
 
     try {
-      const monto = Number.parseFloat(montoGasto)
-      console.log("[v0] Llamando a PresupuestoController.agregarGasto...")
-
-      await PresupuestoController.agregarGasto(categoriaGasto, nombreGasto, monto)
-
-      console.log("[v0] Gasto agregado, cerrando modal...")
+      await PresupuestoController.agregarGasto(categoriaGasto, nombreGasto.trim(), monto)
       cerrarModal()
-
-      console.log("[v0] Recargando datos manualmente...")
       await cargarDatos()
-
       Alert.alert("Éxito", "Gasto agregado correctamente")
-      console.log("[v0] Proceso completado")
     } catch (error) {
-      console.error("[v0] Error al agregar gasto:", error)
       Alert.alert("Error", error.message || "No se pudo agregar el gasto")
     }
   }
@@ -541,21 +597,56 @@ export default function PresupuestoMensualScreen() {
   }
 
   const handleGuardarEdicionGasto = async () => {
-    if (nombreGasto && montoGasto && categoriaGasto) {
-      try {
-        await PresupuestoController.modificarGasto(
-          itemSeleccionado.id,
-          categoriaGasto,
-          nombreGasto,
-          Number.parseFloat(montoGasto),
-        )
-        cerrarModal()
-        Alert.alert("Éxito", "Gasto actualizado correctamente")
-      } catch (error) {
-        Alert.alert("Error", error.message)
-      }
-    } else {
-      Alert.alert("Error", "Por favor completa todos los campos")
+    // Validar nombre del gasto
+    if (!nombreGasto || !nombreGasto.trim()) {
+      Alert.alert("Error", "Por favor ingresa el nombre del gasto")
+      return
+    }
+
+    if (nombreGasto.trim().length < 3) {
+      Alert.alert("Error", "El nombre debe tener al menos 3 caracteres")
+      return
+    }
+
+    if (nombreGasto.trim().length > 50) {
+      Alert.alert("Error", "El nombre no puede exceder 50 caracteres")
+      return
+    }
+
+    // Validar monto
+    if (!montoGasto || montoGasto.trim() === "") {
+      Alert.alert("Error", "Por favor ingresa el monto")
+      return
+    }
+
+    const monto = Number.parseFloat(montoGasto)
+    if (isNaN(monto)) {
+      Alert.alert("Error", "El monto debe ser un número válido")
+      return
+    }
+
+    if (monto <= 0) {
+      Alert.alert("Error", "El monto debe ser mayor a 0")
+      return
+    }
+
+    if (monto > 1000000000) {
+      Alert.alert("Error", "El monto es demasiado alto")
+      return
+    }
+
+    // Validar categoría
+    if (!categoriaGasto) {
+      Alert.alert("Error", "Por favor selecciona una categoría")
+      return
+    }
+
+    try {
+      await PresupuestoController.modificarGasto(itemSeleccionado.id, categoriaGasto, nombreGasto.trim(), monto)
+      cerrarModal()
+      Alert.alert("Éxito", "Gasto actualizado correctamente")
+    } catch (error) {
+      Alert.alert("Error", error.message)
     }
   }
 
@@ -591,8 +682,19 @@ export default function PresupuestoMensualScreen() {
       return false
     }
 
-    // Aquí puedes agregar filtro por fecha si guardas fecha en cada gasto
-    // if (fechaFiltro) { ... }
+    // Filtro por fecha funcional
+    if (fechaFiltro) {
+      const gastoFecha = new Date(gasto.fecha)
+      const filtroFecha = new Date(fechaFiltro)
+
+      // Comparar solo año, mes y día (ignorar horas)
+      const gastoSoloFecha = new Date(gastoFecha.getFullYear(), gastoFecha.getMonth(), gastoFecha.getDate())
+      const filtroSoloFecha = new Date(filtroFecha.getFullYear(), filtroFecha.getMonth(), filtroFecha.getDate())
+
+      if (gastoSoloFecha.getTime() !== filtroSoloFecha.getTime()) {
+        return false
+      }
+    }
 
     return true
   })
