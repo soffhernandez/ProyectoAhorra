@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import Checkbox from 'expo-checkbox';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function PantallaAcceso({ navigation }) {
 
@@ -36,13 +37,18 @@ export default function PantallaAcceso({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.contenedorPantalla}
     >
-      <View style={styles.tarjeta}>
 
-        {/* TÍTULO */}
+      
+
+      <View style={styles.tarjeta}>
+        {/* ← Flecha de regreso */}
+      <TouchableOpacity style={styles.flecha} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={28} color="#000000ff" />
+      </TouchableOpacity>
+
         <Text style={styles.tituloPrincipal}>Bienvenido</Text>
         <Text style={styles.subtitulo}>Inicia sesión para continuar</Text>
 
-        {/* USUARIO */}
         <View style={styles.grupoCampo}>
           <Text style={styles.tituloCampo}>Correo electrónico</Text>
           <TextInput
@@ -56,7 +62,6 @@ export default function PantallaAcceso({ navigation }) {
           {errorUsuario ? <Text style={styles.textoError}>{errorUsuario}</Text> : null}
         </View>
 
-        {/* CONTRASEÑA */}
         <View style={styles.grupoCampo}>
           <Text style={styles.tituloCampo}>Contraseña</Text>
           <TextInput
@@ -71,7 +76,6 @@ export default function PantallaAcceso({ navigation }) {
           {errorContrasena ? <Text style={styles.textoError}>{errorContrasena}</Text> : null}
         </View>
 
-        {/* MOSTRAR CONTRASEÑA */}
         <View style={styles.filaCheckbox}>
           <Checkbox
             value={mostrarContrasena}
@@ -81,12 +85,10 @@ export default function PantallaAcceso({ navigation }) {
           <Text style={styles.textoCheckbox}>Mostrar contraseña</Text>
         </View>
 
-        {/* LINK RECUPERAR */}
         <TouchableOpacity onPress={() => navigation.navigate("Recuperacion")}>
           <Text style={styles.olvidoContrasena}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
 
-        {/* BOTÓN */}
         <TouchableOpacity style={styles.boton} onPress={iniciarSesion}>
           <Text style={styles.textoBoton}>INGRESAR</Text>
         </TouchableOpacity>
@@ -95,7 +97,7 @@ export default function PantallaAcceso({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
-  
+
 const styles = StyleSheet.create({
   contenedorPantalla: {
     flex: 1,
@@ -104,16 +106,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  flecha: {
+    position: "absolute",
+    top: 35,
+    left: 25,
+    zIndex: 10,
+  },
+
   tarjeta: {
     width: "85%",
     backgroundColor: "#fff",
     padding: 26,
     borderRadius: 18,
     elevation: 8,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { height: 4, width: 0 },
   },
 
   tituloPrincipal: {
@@ -130,9 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
 
-  grupoCampo: {
-    marginBottom: 16,
-  },
+  grupoCampo: { marginBottom: 16 },
 
   tituloCampo: {
     fontSize: 14,
@@ -165,15 +168,11 @@ const styles = StyleSheet.create({
     gap: 6,
   },
 
-  textoCheckbox: {
-    fontSize: 14,
-    color: "#333",
-  },
+  textoCheckbox: { fontSize: 14, color: "#333" },
 
   olvidoContrasena: {
     color: "#1E88E5",
     fontSize: 14,
-    textAlign: "right",
     marginBottom: 18,
   },
 
@@ -182,8 +181,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
-    shadowColor: "#000",
-    elevation: 4,
   },
 
   textoBoton: {
