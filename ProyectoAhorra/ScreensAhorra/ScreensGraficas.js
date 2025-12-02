@@ -1,33 +1,108 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { PieChart, LineChart } from "react-native-chart-kit";
+import { Controlador } from "../controllers/UsuarioController";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 const screenWidth = Dimensions.get("window").width;
+const controlador = new Controlador();
 
 export default function Graficas() {
   const navigation = useNavigation();
 
-  const ingresosCategorias = [
-    { name: "Salario", population: 60, color: "#00cc66", legendFontColor: "#333", legendFontSize: 13 },
-    { name: "Freelance", population: 25, color: "#4da6ff", legendFontColor: "#333", legendFontSize: 13 },
-    { name: "Inversiones", population: 15, color: "#00b3b3", legendFontColor: "#333", legendFontSize: 13 },
-  ];
+  const [ingresosCategorias, setIngresosCategorias] = useState([]);
+  const [egresosCategorias, setEgresosCategorias] = useState([]);
+  const [mensual, setMensual] = useState(null);
 
-  const egresosCategorias = [
-    { name: "Renta", population: 40, color: "#ff6666", legendFontColor: "#333", legendFontSize: 13 },
-    { name: "Transporte", population: 30, color: "#ff9966", legendFontColor: "#333", legendFontSize: 13 },
-    { name: "Alimentos", population: 30, color: "#ff4d4d", legendFontColor: "#333", legendFontSize: 13 },
-  ];
+  const [resumen, setResumen] = useState({ ingresos: 0, gastos: 0, balance: 0 });
 
-  const mensual = {
-    labels: ["Ene", "Feb", "Mar", "Abr", "May"],
-    datasets: [
-      { data: [100, 120, 140, 130, 150], color: () => "#00cc66" },
-      { data: [60, 80, 90, 110, 120], color: () => "#ff4d4d" },
-    ],
+  useFocusEffect(
+  useCallback(() => {
+    inicializar(); 
+  }, [])
+);
+
+  const inicializar = async () => {
+    await controlador.initialize();    
+    await cargarDatos();
   };
+
+  const cargarDatos = async () => {
+    const transacciones = await controlador.obtenerTransacciones();
+
+    const categoriasIngresos = {};
+    const categoriasGastos = {};
+
+    const ingresosMes = {};
+    const gastosMes = {};
+
+    let totalIngresos = 0;
+    let totalGastos = 0;
+
+    transacciones.forEach(t => {
+      // ------ PIE CHART CATEGORÍAS ------
+      if (t.ingresos > 0) {
+        categoriasIngresos[t.categoria] = (categoriasIngresos[t.categoria] || 0) + t.ingresos;
+        totalIngresos += t.ingresos;
+      }
+
+      if (t.gastos > 0) {
+        categoriasGastos[t.categoria] = (categoriasGastos[t.categoria] || 0) + t.gastos;
+        totalGastos += t.gastos;
+      }
+
+      // ------ LÍNEA MENSUAL ------
+      const mes = t.fecha.slice(5, 7); // Ej: "2025-01-13" → "01"
+
+      ingresosMes[mes] = (ingresosMes[mes] || 0) + t.ingresos;
+      gastosMes[mes] = (gastosMes[mes] || 0) + t.gastos;
+    });
+
+    // -------- DATOS CATEGORÍAS --------
+    setIngresosCategorias(
+      Object.keys(categoriasIngresos).map((cat, i) => ({
+        name: cat,
+        population: categoriasIngresos[cat],
+        color: coloresIngresos[i % coloresIngresos.length],
+        legendFontColor: "#333",
+        legendFontSize: 13,
+      }))
+    );
+
+    setEgresosCategorias(
+      Object.keys(categoriasGastos).map((cat, i) => ({
+        name: cat,
+        population: categoriasGastos[cat],
+        color: coloresGastos[i % coloresGastos.length],
+        legendFontColor: "#333",
+        legendFontSize: 13,
+      }))
+    );
+
+    // -------- DATOS MENSUALES --------
+    const meses = ["01","02","03","04","05","06","07","08","09","10","11","12"];
+    const etiquetas = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+
+    setMensual({
+      labels: etiquetas,
+      datasets: [
+        { data: meses.map(m => ingresosMes[m] || 0), color: () => "#00cc66" },
+        { data: meses.map(m => gastosMes[m] || 0), color: () => "#ff4d4d" },
+      ]
+    });
+
+    // -------- RESUMEN --------
+    setResumen({
+      ingresos: totalIngresos,
+      gastos: totalGastos,
+      balance: totalIngresos - totalGastos,
+    });
+  };
+
+  if (!mensual) return <Text style={{ margin: 20 }}>Cargando gráficas...</Text>;
 
   return (
     <View style={styles.container}>
@@ -47,23 +122,23 @@ export default function Graficas() {
           <View style={[styles.summaryBox, { backgroundColor: "#f0fff5" }]}>
             <Ionicons name="trending-up-outline" size={22} color="#00cc66" />
             <Text style={styles.summaryLabel}>Ingresos</Text>
-            <Text style={[styles.summaryValue, { color: "#00cc66" }]}>$6,500</Text>
+            <Text style={[styles.summaryValue, { color: "#00cc66" }]}>${resumen.ingresos}</Text>
           </View>
 
           <View style={[styles.summaryBox, { backgroundColor: "#fff5f5" }]}>
             <Ionicons name="trending-down-outline" size={22} color="#ff4d4d" />
             <Text style={styles.summaryLabel}>Gastos</Text>
-            <Text style={[styles.summaryValue, { color: "#ff4d4d" }]}>$1,700</Text>
+            <Text style={[styles.summaryValue, { color: "#ff4d4d" }]}>${resumen.gastos}</Text>
           </View>
 
           <View style={[styles.summaryBox, { backgroundColor: "#f5f8ff" }]}>
             <Ionicons name="cash-outline" size={22} color="#4da6ff" />
             <Text style={styles.summaryLabel}>Balance</Text>
-            <Text style={[styles.summaryValue, { color: "#4da6ff" }]}>$4,800</Text>
+            <Text style={[styles.summaryValue, { color: "#4da6ff" }]}>${resumen.balance}</Text>
           </View>
         </View>
 
-        {/* INGRESOS PIE */}
+        {/* PIE: INGRESOS */}
         <Text style={styles.sectionTitle}>Ingresos por categoría</Text>
         <PieChart
           data={ingresosCategorias}
@@ -75,7 +150,7 @@ export default function Graficas() {
           paddingLeft={"15"}
         />
 
-        {/* EGRESOS PIE */}
+        {/* PIE: GASTOS */}
         <Text style={styles.sectionTitle}>Gastos por categoría</Text>
         <PieChart
           data={egresosCategorias}
@@ -86,7 +161,7 @@ export default function Graficas() {
           backgroundColor={"transparent"}
           paddingLeft={"15"}
         />
-
+        
         {/* LÍNEA */}
         <Text style={styles.sectionTitle}>Ingresos vs Gastos por mes</Text>
         <LineChart
@@ -101,6 +176,9 @@ export default function Graficas() {
     </View>
   );
 }
+
+const coloresIngresos = ["#00cc66", "#4da6ff", "#00b3b3", "#33cc33"];
+const coloresGastos = ["#ff4d4d", "#ff9966", "#ff6666", "#cc0000"];
 
 const chartConfig = {
   backgroundColor: "#fff",
