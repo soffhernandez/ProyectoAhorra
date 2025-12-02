@@ -4,7 +4,6 @@ import * as SQLite from 'expo-sqlite';
 class DatabaseService {
     constructor() {
         this.db = null;
-        // Claves de LocalStorage (del segundo código)
         this.storageKey = 'usuarios';
         this.presupuestosKey = 'presupuestos';
         this.categoriasKey = 'categorias';
@@ -24,7 +23,6 @@ class DatabaseService {
     async crearTablas() {
         if (Platform.OS === 'web') return;
 
-        // Definición de tablas unificada (tomada del segundo código, que es más completo)
         await this.db.execAsync(`
             CREATE TABLE IF NOT EXISTS usuarios_registro (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +30,8 @@ class DatabaseService {
                 correo TEXT NOT NULL UNIQUE,
                 contrasena TEXT NOT NULL,
                 telefono TEXT,
-                fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+                fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                rec TEXT NOT NULL
             );
 
 
@@ -62,9 +61,24 @@ class DatabaseService {
                 FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE CASCADE
             );
         `);
+
+        await this.agregarColumnaSiNoExiste('usuarios_registro', 'rec', 'TEXT NOT NULL DEFAULT "{}"');
     }
 
-
+    async agregarColumnaSiNoExiste(nombreTabla, nombreColumna, tipoColumna) {
+        try {
+            // Check if column exists
+            const tableInfo = await this.db.getAllAsync(`PRAGMA table_info(${nombreTabla})`);
+            const columnExists = tableInfo.some(col => col.name === nombreColumna);
+            
+            if (!columnExists) {
+                console.log(`Agregando columna ${nombreColumna} a tabla ${nombreTabla}`);
+                await this.db.execAsync(`ALTER TABLE ${nombreTabla} ADD COLUMN ${nombreColumna} ${tipoColumna}`);
+            }
+        } catch (error) {
+            console.error(`Error al verificar/agregar columna ${nombreColumna}:`, error);
+        }
+    }
 
 
 
@@ -184,31 +198,22 @@ async obtenerUltimoUsuario() {
         }
 
 
-    // get*All* se reemplaza por el getAll genérico si se quiere usar la misma lógica
     async getAllUsuarios() {
-        return this.getAll(this.storageKey); // 'usuarios'
+        return this.getAll(this.storageKey); 
     }
 
     async addUsuario(nombre) {
-        // Se usa el método genérico 'add' para mayor reusabilidad
         return this.add('usuarios', { nombre });
     }
     
-    // El método update del segundo código (para usuarios) se puede simplificar usando el genérico
     async updateUsuario(id, nuevoNombre) {
         return this.update('usuarios', id, { nombre: nuevoNombre });
     }
 
-    // El método remove del segundo código (para usuarios) se puede simplificar usando el genérico
     async removeUsuario(id) {
         return this.remove('usuarios', id);
     }
     
-    // Nota: Los nombres de los métodos del segundo código (getAll, add, update, remove) colisionan con los genéricos. 
-    // He renombrado los métodos específicos para evitar el conflicto.
-
-
-
     async getCategorias() {
         return this.getAll(this.categoriasKey); // 'categorias'
     }

@@ -5,6 +5,7 @@ export class Usuario {
         this.id = id;
         this.nombre = nombre;
         this.fecha_creacion = fecha_creacion;
+        this.rec = rec
     }
 
       static validar(nombre) {
