@@ -34,7 +34,8 @@ export class Controlador {
             return new Usuario(
                 nuevoUsuario.id,
                 nuevoUsuario.nombre,
-                nuevoUsuario.fecha_creacion
+                nuevoUsuario.fecha_creacion,
+                nuevoUsuario.rec
             );
         } catch (error) {
             console.error('Error al crear usuario:', error);
@@ -53,7 +54,8 @@ export class Controlador {
             return new Usuario(
                 actualizado.id,
                 actualizado.nombre,
-                actualizado.fecha_creacion
+                actualizado.fecha_creacion,
+                actualizado.rec
             );
         } catch (error) {
             console.error('Error al actualizar usuario:', error);
