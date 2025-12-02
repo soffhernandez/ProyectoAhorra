@@ -7,8 +7,15 @@ export default function PantallaRecuperacion({ navigation }) {
   const [correo, setCorreo] = useState('');
 
   const recuperarContrasena = () => {
-    console.log('Correo para recuperación:', correo);
-  };
+  if (!correo || !correo.includes("@")) {
+    alert("Por favor ingresa un correo válido");
+    return;
+  }
+
+  alert("Se enviaron las instrucciones de recuperación a tu correo.");
+  navigation.navigate("Acceso"); 
+};
+
  
   return (
     <KeyboardAvoidingView
@@ -27,9 +34,6 @@ export default function PantallaRecuperacion({ navigation }) {
   <Text style={styles.titulo}>Recuperar Contraseña</Text>
 </View>
 
-
-        <Text style={styles.titulo}>Recuperar Contraseña</Text>
-
         <Text style={styles.subtitulo}>Ingresa tu correo electrónico</Text>
         <TextInput
           style={styles.entradaTexto}
@@ -41,11 +45,12 @@ export default function PantallaRecuperacion({ navigation }) {
         />
 
         <TouchableOpacity 
-  style={styles.boton} 
-  onPress={() => navigation.navigate('AhorraMas')}
->
+          style={styles.boton} 
+           onPress={recuperarContrasena}
+        >
   <Text style={styles.textoBoton}>Enviar instrucciones</Text>
 </TouchableOpacity>
+
 
       </View>
     </KeyboardAvoidingView>

@@ -85,7 +85,7 @@ export default function PantallaAcceso({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
-
+  
 const styles = StyleSheet.create({
   contenedorPantalla: {
     flex: 1,

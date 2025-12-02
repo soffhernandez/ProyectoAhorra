@@ -11,27 +11,30 @@ class DatabaseService {
         this.gastosKey = 'gastos';
     }
 
-    async initialize() {
-        if (Platform.OS === 'web') {
-            console.log('Usando LocalStorage para web');
-        } else {
-            console.log('Usando SQLite para móvil');
-            // Usamos la opción 'useNewConnection' del segundo código para compatibilidad
-            this.db = await SQLite.openDatabaseAsync('miapp.db', { useNewConnection: true });
-            await this.crearTablas();
-        }
+  async initialize() {
+    if (Platform.OS === "web") {
+      console.log("Usando LocalStorage para web")
+    } else {
+      console.log("Usando SQLite para móvil")
+      this.db = await SQLite.openDatabaseAsync("miapp.db", {useNewConnection: true})
+      await this.crearTablas()
     }
+  }
 
     async crearTablas() {
         if (Platform.OS === 'web') return;
 
         // Definición de tablas unificada (tomada del segundo código, que es más completo)
         await this.db.execAsync(`
-            CREATE TABLE IF NOT EXISTS usuarios (
+            CREATE TABLE IF NOT EXISTS usuarios_registro (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
+                correo TEXT NOT NULL UNIQUE,
+                contrasena TEXT NOT NULL,
+                telefono TEXT,
                 fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
             );
+
 
             CREATE TABLE IF NOT EXISTS presupuestos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -155,6 +158,30 @@ class DatabaseService {
             return true;
         }
     }
+    
+    // Obtener el último usuario registrado
+async obtenerUltimoUsuario() {
+    if (Platform.OS === "web") {
+        const usuarios = await this.getAll("usuarios_registro");
+        return usuarios.length > 0 ? usuarios[0] : null;  // ya vienen ordenados DESC
+    } else {
+        const result = await this.db.getFirstAsync(
+            "SELECT * FROM usuarios_registro ORDER BY id DESC LIMIT 1"
+        );
+        return result || null;
+    }
+}
+
+    // Registrar usuario
+        async agregarUsuarioRegistro(data) {
+            return this.add("usuarios_registro", data);
+        }
+
+    // Obtener usuario por correo
+        async obtenerUsuarioPorCorreo(correo) {
+            const usuarios = await this.getAll("usuarios_registro");
+            return usuarios.find(u => u.correo === correo);
+        }
 
 
     // get*All* se reemplaza por el getAll genérico si se quiere usar la misma lógica
@@ -337,4 +364,4 @@ class DatabaseService {
     }
 }
 
-export default new DatabaseService();
+export default new DatabaseService()

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Switch, KeyboardAvoidingView, Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import DatabaseService from "../database/DatabaseService";
 
 export default function PantallaRegistro({navigation}) {
   const [nombre, setNombre] = useState('');
@@ -11,9 +12,41 @@ export default function PantallaRegistro({navigation}) {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [nose, setNose] = useState(false);
 
-  function registrarUsuario() {
-    alert('Registro completo:\n' + nombre + '\n' + correo);
+  async function registrarUsuario() {
+  try {
+    if (!nombre || !correo || !contrasena || !confirmar) {
+      alert("Llena todos los campos");
+      return;
+    }
+
+    if (contrasena !== confirmar) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    if (!aceptaTerminos) {
+      alert("Debes aceptar los términos");
+      return;
+    }
+
+    // 1. Guardar usuario
+    await DatabaseService.agregarUsuarioRegistro({
+      nombre,
+      correo,
+      contrasena,
+      telefono
+    });
+
+    alert("Usuario registrado exitosamente");
+
+    // 2. Regresar a Inicio
+    navigation.navigate("InicioApp");
+
+  } catch (error) {
+    console.log("Error al registrar:", error);
+    alert("Error al registrar usuario");
   }
+}
 
   return (
     <View style={styles.page}>
@@ -104,6 +137,8 @@ export default function PantallaRegistro({navigation}) {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   page: {
