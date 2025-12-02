@@ -31,7 +31,7 @@ function MyTabs() {
           let iconName;
 
           if (route.name === 'Inicio') iconName = 'home';
-          else if (route.name === 'Ingresos') iconName = 'cash';
+          else if (route.name === 'Transacciones') iconName = 'cash';
           else if (route.name === 'Presupuesto') iconName = 'wallet';
           else if (route.name === 'Gráficas') iconName = 'bar-chart';
 
@@ -40,7 +40,7 @@ function MyTabs() {
       })}
     >
       <Tab.Screen name="Inicio" component={ScreensInicio} />
-      <Tab.Screen name="Ingresos" component={IngresosScreen} />
+      <Tab.Screen name="Transacciones" component={IngresosScreen} />
       <Tab.Screen name="Presupuesto" component={Presupuesto} />
       <Tab.Screen name="Gráficas" component={Graficas} />
     </Tab.Navigator>
@@ -61,8 +61,7 @@ export default function App() {
         <Stack.Screen name="Recuperacion" component={PantallaRecuperacion} />
         <Stack.Screen name="Registro" component={PantallaRegistro} />
         <Stack.Screen name="AhorraMas" component={MyTabs} />
-         <Stack.Screen name="Perfil" component={PerfilScreen} />
-   
+        <Stack.Screen name="Perfil" component={PerfilScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
